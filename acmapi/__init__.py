@@ -13,13 +13,9 @@ def create_app(config_files=None, envvars=None, **other):
     for i in iterable(envvars): 
         app.config.from_envvar(i)
 
-    for key, value in other.iteritems():
+    for key, value in other.items():
         app.config[key] = value
     
-    #from views import acmweb
-    #app.register_blueprint(acmweb)
-    
-    # database
     DB.init_app(app)
     
     return app
