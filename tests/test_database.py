@@ -2,7 +2,8 @@
 # -*- coding: utf-8 -*-
 # Copyright © 2014 Cameron Brandon White
 
-from acmapi import create_app, DB
+from flask import Flask
+from acmapi import DB
 from acmapi.database import \
     Event, Post, Person, Membership, Officership
 import unittest
@@ -14,7 +15,9 @@ from flask.ext.sqlalchemy import *
 class test_database(unittest.TestCase):
     
     def setUp(self):
-        self.app = create_app(SQLALCHEMY_DATABASE_URI='sqlite://')
+        self.app = Flask(__name__)
+        self.app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite://'
+        DB.init_app(self.app)
 
     def tearDown(self):
         pass
