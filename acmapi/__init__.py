@@ -4,6 +4,9 @@ from .database import DB
 
 __version__ = '0.1.0'
 
+DATETIME_FORMAT = "%Y-%m-%d %H:%M:%S.%f"
+DATE_FORMAT = '%Y-%m-%d'
+
 def create_app(config_files=None, envvars=None, **other):
     app = Flask(__name__)
     
@@ -17,7 +20,7 @@ def create_app(config_files=None, envvars=None, **other):
         app.config[key] = value
     
     DB.init_app(app)
-    
+
     return app
 
 def iterable(x):
