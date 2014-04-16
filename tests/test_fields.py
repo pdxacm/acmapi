@@ -38,8 +38,27 @@ class test_fields(unittest.TestCase):
         with self.app.test_client() as client:
             with self.app.test_request_context():
                 self.assertEqual(
-                    json.dumps(marshal({}, root_fields)),
-                    '{}')
+                    dict(marshal({}, root_fields)),
+                    {
+                        "events_url": [
+                            "http://localhost/events/"
+                        ], 
+                        "memberships_url": [
+                            "http://localhost/memberships/"
+                        ], 
+                        "officerships_url": [
+                            "http://localhost/officerships/"
+                        ], 
+                        "people_url": [
+                            "http://localhost/people/", 
+                            "http://localhost/people/<int:person_id>", 
+                            "http://localhost/people/<int:editor_id>",
+                            "http://localhost/people/<string:username>"
+                        ], 
+                        "posts_url": [
+                            "http://localhost/posts/"
+                        ]
+                    })
     
     def test_person_fields(self):
         
