@@ -1,11 +1,14 @@
 from flask import Flask
-
-from .database import DB
-
-__version__ = '0.1.0'
+from flask.ext import restful
 
 DATETIME_FORMAT = "%Y-%m-%d %H:%M:%S.%f"
 DATE_FORMAT = '%Y-%m-%d'
+
+__version__ = '0.1.0'
+
+from .database import DB
+from .resources import \
+    API, Root, Events, People, Memberships, Officerships
 
 def create_app(config_files=None, envvars=None, **other):
     app = Flask(__name__)
@@ -20,6 +23,9 @@ def create_app(config_files=None, envvars=None, **other):
         app.config[key] = value
     
     DB.init_app(app)
+
+
+    API.init_app(app)
 
     return app
 
