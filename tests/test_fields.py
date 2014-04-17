@@ -44,10 +44,12 @@ class test_fields(unittest.TestCase):
                             "http://localhost/events/"
                         ], 
                         "memberships_url": [
-                            "http://localhost/memberships/"
+                            "http://localhost/memberships/",
+                            "http://localhost/memberships/<int:membership_id>"
                         ], 
                         "officerships_url": [
-                            "http://localhost/officerships/"
+                            "http://localhost/officerships/",
+                            "http://localhost/officerships/<int:officership_id>"
                         ], 
                         "people_url": [
                             "http://localhost/people/", 
