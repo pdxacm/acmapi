@@ -492,3 +492,135 @@ $ curl http://acm.pdx.edu/api/v1/events/1
     }
 ]
 ```
+
+### Posts
+
+#### Add Posts
+
+```sh
+$ curl http://acm.pdx.edu/api/v1/posts/ \
+    -d title="This is the Title" \
+    -d description="This is the description" \
+    -d content="This is the content" 
+```
+
+```json
+{
+    "content": "This is the content", 
+    "description": "This is the description", 
+    "edited_at": "Mon, 21 Apr 2014 04:26:59 -0000", 
+    "editor": "http://acm.pdx.edu/api/v1/people/1", 
+    "editor_id": 1, 
+    "hidden": false, 
+    "post_id": 1, 
+    "revision": 1, 
+    "title": "This is the Title"
+}
+```
+
+```sh
+$ curl http://acm.pdx.edu/api/v1/posts/ \
+    -d title="This is another Title" \
+    -d description="This is another description" \
+    -d content="This is some more content" 
+```
+
+```json
+{
+    "content": "This is some more content", 
+    "description": "This is another description", 
+    "edited_at": "Mon, 21 Apr 2014 04:29:07 -0000", 
+    "editor": "http://acm.pdx.edu/api/v1/people/1", 
+    "editor_id": 1, 
+    "hidden": false, 
+    "post_id": 2, 
+    "revision": 1, 
+    "title": "This is another Title"
+}
+```
+
+#### Update Posts by id
+
+```sh
+$ curl http://acm.pdx.edu/api/v1/posts/1 -d canceled=True
+```
+
+```json
+{
+    "content": "This is the content", 
+    "description": "This is the description", 
+    "edited_at": "Mon, 21 Apr 2014 04:30:12 -0000", 
+    "editor": "http://acm.pdx.edu/api/v1/people/1", 
+    "editor_id": 1, 
+    "hidden": false, 
+    "post_id": 1, 
+    "revision": 2, 
+    "title": "This is the Title"
+}
+```
+
+#### List all Posts
+
+```sh
+$ curl http://acm.pdx.edu/api/v1/posts/
+```
+
+```json
+[
+    {
+        "content": "This is the content", 
+        "description": "This is the description", 
+        "edited_at": "Mon, 21 Apr 2014 04:30:12 -0000", 
+        "editor": "http://acm.pdx.edu/api/v1/people/1", 
+        "editor_id": 1, 
+        "hidden": false, 
+        "post_id": 1, 
+        "revision": 2, 
+        "title": "This is the Title"
+    }, 
+    {
+        "content": "This is some more content", 
+        "description": "This is another description", 
+        "edited_at": "Mon, 21 Apr 2014 04:29:07 -0000", 
+        "editor": "http://acm.pdx.edu/api/v1/people/1", 
+        "editor_id": 1, 
+        "hidden": false, 
+        "post_id": 2, 
+        "revision": 1, 
+        "title": "This is another Title"
+    }
+]
+```
+
+#### List all Posts revisions by id
+
+```sh
+$ curl http://acm.pdx.edu/api/v1/posts/1
+```
+
+```json
+[
+    {
+        "content": "This is the content", 
+        "description": "This is the description", 
+        "edited_at": "Mon, 21 Apr 2014 04:26:59 -0000", 
+        "editor": "http://acm.pdx.edu/api/v1/people/1", 
+        "editor_id": 1, 
+        "hidden": false, 
+        "post_id": 1, 
+        "revision": 1, 
+        "title": "This is the Title"
+    }, 
+    {
+        "content": "This is the content", 
+        "description": "This is the description", 
+        "edited_at": "Mon, 21 Apr 2014 04:30:12 -0000", 
+        "editor": "http://acm.pdx.edu/api/v1/people/1", 
+        "editor_id": 1, 
+        "hidden": false, 
+        "post_id": 1, 
+        "revision": 2, 
+        "title": "This is the Title"
+    }
+]
+```
