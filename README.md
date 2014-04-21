@@ -231,7 +231,7 @@ $ curl http://acm.pdx.edu/api/v1/memberships/
 #### Find membership by id 
 
 ```sh
-$ cul http://acm.pdx.edu/api/v1/memberships/1
+$ curl http://acm.pdx.edu/api/v1/memberships/1
 ```
 
 ```json
@@ -325,4 +325,170 @@ $ curl -X DELETE http://acm.pdx.edu/api/v1/officerships/1
 {
     "message": "delete successful"
 }
+```
+
+### Events
+
+#### Add Events
+
+```sh
+$ curl http://acm.pdx.edu/api/v1/events/ \
+    -d title="Event Title 1" \
+    -d description="Event 1" \
+    -d location="Room 1" \
+    -d speaker="Bob" \
+    -d start="2014-10-10 20:20:00.00000" \
+    -d end="2014-10-10 21:10:00.00000"
+```
+
+```json
+{
+    "canceled": false, 
+    "description": "Event 1", 
+    "edited_at": "Mon, 21 Apr 2014 04:12:35 -0000", 
+    "editor": "http://acm.pdx.edu/api/v1/people/1", 
+    "editor_id": 1, 
+    "end": "Fri, 10 Oct 2014 21:10:00 -0000", 
+    "event_id": 1, 
+    "hidden": false, 
+    "location": "Room 1", 
+    "revision": 1, 
+    "speaker": "Bob", 
+    "start": "Fri, 10 Oct 2014 20:20:00 -0000", 
+    "title": "Event Title 1"
+}
+```
+
+```sh
+$ curl http://acm.pdx.edu/api/v1/events/ \
+    -d title="Event Title 2" \
+    -d description="Event 2" \
+    -d location="Room 2" \
+    -d speaker="Alex" \
+    -d start="2014-11-10 20:20:00.00000" \
+    -d end="2014-11-10 21:10:00.00000"
+```
+
+```json
+{
+    "canceled": false, 
+    "description": "Event 2", 
+    "edited_at": "Mon, 21 Apr 2014 04:14:42 -0000", 
+    "editor": "http://acm.pdx.edu/api/v1/people/1", 
+    "editor_id": 1, 
+    "end": "Mon, 10 Nov 2014 21:10:00 -0000", 
+    "event_id": 2, 
+    "hidden": false, 
+    "location": "Room 2", 
+    "revision": 1, 
+    "speaker": "Alex", 
+    "start": "Mon, 10 Nov 2014 20:20:00 -0000", 
+    "title": "Event Title 2"
+}
+```
+
+#### Update Events by id
+
+```sh
+$ curl http://acm.pdx.edu/api/v1/events/1 -d canceled=True
+```
+
+```json
+{
+    "canceled": true, 
+    "description": "Event 1", 
+    "edited_at": "Mon, 21 Apr 2014 04:16:35 -0000", 
+    "editor": "http://acm.pdx.edu/api/v1/people/1", 
+    "editor_id": 1, 
+    "end": "Fri, 10 Oct 2014 21:10:00 -0000", 
+    "event_id": 1, 
+    "hidden": false, 
+    "location": "Room 1", 
+    "revision": 2, 
+    "speaker": "Bob", 
+    "start": "Fri, 10 Oct 2014 20:20:00 -0000", 
+    "title": "Event Title 1"
+}
+```
+
+#### List all Events
+
+```sh
+$ curl http://acm.pdx.edu/api/v1/events/
+```
+
+```json
+[
+    {
+        "canceled": true, 
+        "description": "Event 1", 
+        "edited_at": "Mon, 21 Apr 2014 04:16:35 -0000", 
+        "editor": "http://acm.pdx.edu/api/v1/people/1", 
+        "editor_id": 1, 
+        "end": "Fri, 10 Oct 2014 21:10:00 -0000", 
+        "event_id": 1, 
+        "hidden": false, 
+        "location": "Room 1", 
+        "revision": 2, 
+        "speaker": "Bob", 
+        "start": "Fri, 10 Oct 2014 20:20:00 -0000", 
+        "title": "Event Title 1"
+    }, 
+    {
+        "canceled": false, 
+        "description": "Event 2", 
+        "edited_at": "Mon, 21 Apr 2014 04:14:42 -0000", 
+        "editor": "http://acm.pdx.edu/api/v1/people/1", 
+        "editor_id": 1, 
+        "end": "Mon, 10 Nov 2014 21:10:00 -0000", 
+        "event_id": 2, 
+        "hidden": false, 
+        "location": "Room 2", 
+        "revision": 1, 
+        "speaker": "Alex", 
+        "start": "Mon, 10 Nov 2014 20:20:00 -0000", 
+        "title": "Event Title 2"
+    }
+]
+```
+
+#### List all Event revisions by id
+
+```sh
+$ curl http://acm.pdx.edu/api/v1/events/1
+```
+
+```json
+[
+    {
+        "canceled": false, 
+        "description": "Event 1", 
+        "edited_at": "Mon, 21 Apr 2014 04:12:35 -0000", 
+        "editor": "http://acm.pdx.edu/api/v1/people/1", 
+        "editor_id": 1, 
+        "end": "Fri, 10 Oct 2014 21:10:00 -0000", 
+        "event_id": 1, 
+        "hidden": false, 
+        "location": "Room 1", 
+        "revision": 1, 
+        "speaker": "Bob", 
+        "start": "Fri, 10 Oct 2014 20:20:00 -0000", 
+        "title": "Event Title 1"
+    }, 
+    {
+        "canceled": true, 
+        "description": "Event 1", 
+        "edited_at": "Mon, 21 Apr 2014 04:16:35 -0000", 
+        "editor": "http://acm.pdx.edu/api/v1/people/1", 
+        "editor_id": 1, 
+        "end": "Fri, 10 Oct 2014 21:10:00 -0000", 
+        "event_id": 1, 
+        "hidden": false, 
+        "location": "Room 1", 
+        "revision": 2, 
+        "speaker": "Bob", 
+        "start": "Fri, 10 Oct 2014 20:20:00 -0000", 
+        "title": "Event Title 1"
+    }
+]
 ```
