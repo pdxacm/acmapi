@@ -42,6 +42,11 @@ def _get_post_by_list(list_id):
             list=list_id).order_by(
                     database.Post.index).all()
 
+def _get_event_by_list(list_id):
+    return database.Event.query.filter_by(
+            list=list_id).order_by(
+                    database.Event.index).all()
+
 class Root(restful.Resource):
     @marshal_with(root_fields)
     def get(self):
@@ -49,7 +54,108 @@ class Root(restful.Resource):
 
 class Events(restful.Resource):
 
-    pass
+    def get(self, event_id=None):
+
+        DB.create_all()
+
+        if event_id:
+
+            event = _get_event_by_list(event_id)
+
+            return marshal(event, event_fields)
+
+        else:
+
+            events = DB.session.query(
+                database.Event,
+                sqlalchemy.func.max(database.Event.index)
+            ).group_by(database.Event.list).all()
+            
+            return list(map(
+                lambda event: 
+                    marshal(event[0], event_fields), 
+                    events))
+
+    def post(self, event_id=None):
+
+        DB.create_all()
+
+        parser = reqparse.RequestParser()
+
+        if event_id:
+
+            parser.add_argument('title', type=str)
+            parser.add_argument('description', type=str)
+            parser.add_argument('speaker', type=str)
+            parser.add_argument('location', type=str)
+            parser.add_argument('start', type=datetime_type)
+            parser.add_argument('end', type=datetime_type)
+            parser.add_argument('hidden', type=bool)
+            parser.add_argument('canceled', type=bool)
+
+            args = parser.parse_args()
+            
+            old_event = DB.session.query(
+                database.Event,
+                sqlalchemy.func.max(database.Event.index)
+            ).filter_by(list = event_id).order_by(database.Event.index).one()[0]
+
+            event = database.Event.create(
+                title = args.title if args.title else old_event.title,
+                description = args.description if args.description else old_event.description,
+                speaker = args.speaker if args.speaker else old_event.speaker,
+                location = args.location if args.location else old_event.location,
+                hidden = args.hidden if args.hidden else old_event.hidden,
+                canceled = args.canceled if args.canceled else old_event.canceled,
+                start = args.start if args.start else old_event.start,
+                end = args.end if args.end else old_event.end,
+                editor = _get_person_by_id(1),
+                edited_datetime = datetime.datetime.now(),
+                index = old_event.index + 1,
+                list = old_event.list,
+            )
+            
+            DB.session.commit()
+
+            return marshal(event, event_fields)
+
+        else:
+
+            parser.add_argument('title', type=str, required=True)
+            parser.add_argument('description', type=str, required=True)
+            parser.add_argument('location', type=str, required=True)
+            parser.add_argument('hidden', type=bool, default=False)
+            parser.add_argument('canceled', type=bool, default=False)
+            parser.add_argument('speaker', type=str, required=True)
+            parser.add_argument('location', type=str, required=True)
+            parser.add_argument('start', type=datetime_type, required=True)
+            parser.add_argument('end', type=datetime_type, required=True)
+
+            args = parser.parse_args()
+            
+            list_id, = DB.session.query(
+                sqlalchemy.func.max(database.Event.list)).first()
+
+            event = database.Event.create(
+                title = args.title,
+                description = args.description,
+                location = args.location,
+                speaker = args.speaker,
+                hidden = args.hidden,
+                canceled = args.canceled,
+                start = args.start,
+                end = args.end,
+                editor = _get_person_by_id(1),
+                edited_datetime = datetime.datetime.now(),
+                index = 1,
+                list = list_id+1 if list_id else 1,
+            )
+
+            DB.session.add(event)
+            DB.session.commit()
+
+            return marshal(event, event_fields) 
+
 
 class Posts(restful.Resource):
 
@@ -476,6 +582,7 @@ API.add_resource(
 API.add_resource(
     Events, 
     '/events/', 
+    '/events/<int:event_id>', 
     endpoint='events')
 
 API.add_resource(

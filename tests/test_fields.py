@@ -41,7 +41,8 @@ class test_fields(unittest.TestCase):
                     dict(marshal({}, root_fields)),
                     {
                         "events_url": [
-                            "http://localhost/events/"
+                            "http://localhost/events/",
+                            "http://localhost/events/<int:event_id>"
                         ], 
                         "memberships_url": [
                             "http://localhost/memberships/",
@@ -127,7 +128,7 @@ class test_fields(unittest.TestCase):
 
                 self.assertEqual(
                     dict(marshal(event, event_fields)),
-                    {'id': 1, 'description': u'This is Event 1',
+                    {'event_id': 0, 'description': u'This is Event 1',
                     'location': u'In the Event Room', 
                     'speaker': u'By the Event 1 speaker',
                     'title': u'Event 1', 'canceled': False,

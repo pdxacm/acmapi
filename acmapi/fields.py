@@ -45,7 +45,7 @@ root_fields = {
 }
 
 event_fields = {
-    'id': Integer,
+    'event_id': Integer(attribute='list'),
     'title': String,
     'description': String, 
     'speaker': String,
