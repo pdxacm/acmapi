@@ -4,5 +4,6 @@ python:
     #- "3.3"
 install:
   - python setup.py install
+  - pip install FreezeGun
 # command to run tests
 script: nosetests --with-doctest

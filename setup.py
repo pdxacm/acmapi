@@ -16,6 +16,7 @@ if __name__ == "__main__":
         test_requires = [
             "Nose",
             "Mock",
+            "FreezeGun",
         ],
         include_package_data=True,
         zip_safe=False,
