@@ -17,6 +17,7 @@ $ curl http://acm.pdx.edu/api/v1/
 {
     "events_url": [
         "http://acm.pdx.edu/api/v1/events/"
+        "http://acm.pdx.edu/api/v1/events/<int:event_id>"
     ], 
     "memberships_url": [
         "http://acm.pdx.edu/api/v1/memberships/", 
@@ -34,6 +35,7 @@ $ curl http://acm.pdx.edu/api/v1/
     ], 
     "posts_url": [
         "http://acm.pdx.edu/api/v1/posts/"
+        "http://acm.pdx.edu/api/v1/posts/<int:post_id>"
     ]
 }
 ```
