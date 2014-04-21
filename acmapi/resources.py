@@ -37,6 +37,11 @@ def _get_membership_by_id(membership_id):
 def _get_officership_by_id(officership_id):
     return database.Officership.query.get(officership_id)
 
+def _get_post_by_list(list_id):
+    return database.Post.query.filter_by(
+            list=list_id).order_by(
+                    database.Post.index).all()
+
 class Root(restful.Resource):
     @marshal_with(root_fields)
     def get(self):
@@ -48,7 +53,90 @@ class Events(restful.Resource):
 
 class Posts(restful.Resource):
 
-    pass
+    def get(self, post_id=None):
+
+        DB.create_all()
+
+        if post_id:
+
+            posts = _get_post_by_list(post_id)
+
+            return marshal(posts, post_fields)
+
+        else:
+
+            posts = DB.session.query(
+                database.Post,
+                sqlalchemy.func.max(database.Post.index)
+            ).group_by(database.Post.list).all()
+            
+            return list(map(
+                lambda post: 
+                    marshal(post[0], post_fields), 
+                    posts))
+        
+    def post(self, post_id=None):
+
+        DB.create_all()
+
+        parser = reqparse.RequestParser()
+
+        if post_id:
+
+            parser.add_argument('title', type=str)
+            parser.add_argument('description', type=str)
+            parser.add_argument('content', type=str)
+            parser.add_argument('hidden', type=bool)
+
+            args = parser.parse_args()
+            
+            old_post = DB.session.query(
+                database.Post,
+                sqlalchemy.func.max(database.Post.index)
+            ).filter_by(list = post_id).order_by(database.Post.index).one()[0]
+
+            post = database.Post.create(
+                title = args.title if args.title else old_post.title,
+                description = args.description if args.description else old_post.description,
+                content = args.content if args.content else old_post.content,
+                hidden = args.hidden if args.hidden else old_post.hidden,
+                editor = _get_person_by_id(1),
+                edited_datetime = datetime.datetime.now(),
+                index = old_post.index + 1,
+                list = old_post.list,
+            )
+            
+            DB.session.commit()
+
+            return marshal(post, post_fields)
+
+        else:
+
+            parser.add_argument('title', type=str, required=True)
+            parser.add_argument('description', type=str, required=True)
+            parser.add_argument('content', type=str, required=True)
+            parser.add_argument('hidden', type=bool, default=False)
+
+            args = parser.parse_args()
+            
+            list_id, = DB.session.query(
+                sqlalchemy.func.max(database.Post.list)).first()
+
+            post = database.Post.create(
+                title = args.title,
+                description = args.description,
+                content = args.content,
+                hidden = args.hidden,
+                editor = _get_person_by_id(1),
+                edited_datetime = datetime.datetime.now(),
+                index = 1,
+                list = list_id+1 if list_id else 1,
+            )
+
+            DB.session.add(post)
+            DB.session.commit()
+
+            return marshal(post, post_fields) 
 
 class People(restful.Resource):
     
@@ -401,6 +489,7 @@ API.add_resource(
 API.add_resource(
     Posts, 
     '/posts/',
+    '/posts/<int:post_id>',
     endpoint='posts')
 
 API.add_resource(

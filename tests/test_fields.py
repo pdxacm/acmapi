@@ -58,7 +58,8 @@ class test_fields(unittest.TestCase):
                             "http://localhost/people/<string:username>"
                         ], 
                         "posts_url": [
-                            "http://localhost/posts/"
+                            "http://localhost/posts/",
+                            "http://localhost/posts/<int:post_id>"
                         ]
                     })
     
@@ -172,7 +173,7 @@ class test_fields(unittest.TestCase):
 
                 self.assertEqual(
                     dict(marshal(post, post_fields)),
-                    {'id': 1, 'description': u'This is Post 1',
+                    {'post_id': 0, 'description': u'This is Post 1',
                     'content': 'This is Post 1 content',
                     'title': u'Post 1', 'hidden': False, 
                     'revision': 0, 

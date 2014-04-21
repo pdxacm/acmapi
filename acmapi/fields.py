@@ -61,7 +61,7 @@ event_fields = {
 }
 
 post_fields = {
-    'id': Integer,
+    'post_id': Integer(attribute='list'),
     'title': String,
     'description': String, 
     'editor_id': Integer,
