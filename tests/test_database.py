@@ -4,7 +4,7 @@
 
 from flask import Flask
 from acmapi import DB
-from acmapi.database import \
+from acmapi.models import \
     Event, Post, Person, Membership, Officership
 import unittest
 import os

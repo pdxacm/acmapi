@@ -17,8 +17,8 @@ from acmapi.fields import \
 
 import acmapi
 
-from acmapi import database
-from acmapi.database import DB
+from acmapi import models
+from acmapi.models import DB
 
 from acmapi import resources
 from acmapi.resources import API
