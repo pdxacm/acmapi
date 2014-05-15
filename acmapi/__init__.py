@@ -6,7 +6,7 @@ DATE_FORMAT = '%Y-%m-%d'
 
 __version__ = '0.1.0'
 
-from .database import DB
+from .models import DB
 from .resources import \
     API, Root, Events, People, Memberships, Officerships
 
@@ -23,7 +23,6 @@ def create_app(config_files=None, envvars=None, **other):
         app.config[key] = value
     
     DB.init_app(app)
-
 
     API.init_app(app)
 

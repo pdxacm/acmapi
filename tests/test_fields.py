@@ -15,8 +15,8 @@ from acmapi.fields import \
     root_fields, event_fields, post_fields, person_fields, \
     membership_fields, officership_fields
 
-from acmapi import database
-from acmapi.database import DB
+from acmapi import models
+from acmapi.models import DB
 
 from acmapi import resources
 from acmapi.resources import API
@@ -71,7 +71,7 @@ class test_fields(unittest.TestCase):
 
                 DB.create_all()
 
-                person = database.Person.create(
+                person = models.Person.create(
                     name = 'John Doe',
                     username = 'johnd',
                     email = 'johnd@example.com',
@@ -94,14 +94,14 @@ class test_fields(unittest.TestCase):
 
                 DB.create_all()
                  
-                person = database.Person.create(
+                person = models.Person.create(
                     name = 'John Doe',
                     username = 'johnd',
                     email = 'johnd@example.com',
                     website = 'http://johnd.com',
                 )
 
-                event = database.Event.create(
+                event = models.Event.create(
                     title = "Event 1",
                     description = "This is Event 1",
                     speaker = "By the Event 1 speaker",
@@ -147,7 +147,7 @@ class test_fields(unittest.TestCase):
 
                 DB.create_all()
 
-                person = database.Person.create(
+                person = models.Person.create(
                     name = 'John Doe',
                     username = 'johnd',
                     email = 'johnd@example.com',
@@ -156,7 +156,7 @@ class test_fields(unittest.TestCase):
 
                 DB.session.add(person)
                  
-                post = database.Post.create(
+                post = models.Post.create(
                     title = 'Post 1',
                     description = 'This is Post 1',
                     content = 'This is Post 1 content',
@@ -189,7 +189,7 @@ class test_fields(unittest.TestCase):
 
                 DB.create_all()
 
-                person = database.Person.create(
+                person = models.Person.create(
                     name = 'John Doe',
                     username = 'johnd',
                     email = 'johnd@example.com',
@@ -198,7 +198,7 @@ class test_fields(unittest.TestCase):
 
                 DB.session.add(person)
 
-                memberships = database.Membership.create(
+                memberships = models.Membership.create(
                     person = person,
                     start_date = datetime.date(2014, 4, 15),
                     end_date = datetime.date(2014, 4, 16))
@@ -221,7 +221,7 @@ class test_fields(unittest.TestCase):
 
                 DB.create_all()
 
-                person = database.Person.create(
+                person = models.Person.create(
                     name = 'John Doe',
                     username = 'johnd',
                     email = 'johnd@example.com',
@@ -230,7 +230,7 @@ class test_fields(unittest.TestCase):
 
                 DB.session.add(person)
 
-                officership = database.Officership.create(
+                officership = models.Officership.create(
                     person = person,
                     title = 'Vice Chair',        
                     start_date = datetime.date(2014, 4, 15),

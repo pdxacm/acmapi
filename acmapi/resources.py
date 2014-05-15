@@ -10,8 +10,8 @@ from sqlalchemy.orm.exc import NoResultFound
 
 import datetime
 
-from . import database
-from .database import DB
+from . import models
+from .models import DB
 from .fields import \
     DateField, MarshallingException, \
     root_fields, event_fields, post_fields, person_fields, \
@@ -23,29 +23,29 @@ from .types import \
 API = restful.Api()
 
 def _get_person_by_id(person_id):
-    return database.Person.query.get(person_id)
+    return models.Person.query.get(person_id)
 
 def _get_person_by_username(username):
     try:
-        return database.Person.query.filter_by(username=username).one()
+        return models.Person.query.filter_by(username=username).one()
     except NoResultFound:
         return None 
 
 def _get_membership_by_id(membership_id):
-    return database.Membership.query.get(membership_id)
+    return models.Membership.query.get(membership_id)
 
 def _get_officership_by_id(officership_id):
-    return database.Officership.query.get(officership_id)
+    return models.Officership.query.get(officership_id)
 
 def _get_post_by_list(list_id):
-    return database.Post.query.filter_by(
+    return models.Post.query.filter_by(
             list=list_id).order_by(
-                    database.Post.index).all()
+                    models.Post.index).all()
 
 def _get_event_by_list(list_id):
-    return database.Event.query.filter_by(
+    return models.Event.query.filter_by(
             list=list_id).order_by(
-                    database.Event.index).all()
+                    models.Event.index).all()
 
 class Root(restful.Resource):
     @marshal_with(root_fields)
@@ -67,9 +67,9 @@ class Events(restful.Resource):
         else:
 
             events = DB.session.query(
-                database.Event,
-                sqlalchemy.func.max(database.Event.index)
-            ).group_by(database.Event.list).all()
+                models.Event,
+                sqlalchemy.func.max(models.Event.index)
+            ).group_by(models.Event.list).all()
             
             return list(map(
                 lambda event: 
@@ -96,11 +96,11 @@ class Events(restful.Resource):
             args = parser.parse_args()
             
             old_event = DB.session.query(
-                database.Event,
-                sqlalchemy.func.max(database.Event.index)
-            ).filter_by(list = event_id).order_by(database.Event.index).one()[0]
+                models.Event,
+                sqlalchemy.func.max(models.Event.index)
+            ).filter_by(list = event_id).order_by(models.Event.index).one()[0]
 
-            event = database.Event.create(
+            event = models.Event.create(
                 title = args.title if args.title else old_event.title,
                 description = args.description if args.description else old_event.description,
                 speaker = args.speaker if args.speaker else old_event.speaker,
@@ -134,9 +134,9 @@ class Events(restful.Resource):
             args = parser.parse_args()
             
             list_id, = DB.session.query(
-                sqlalchemy.func.max(database.Event.list)).first()
+                sqlalchemy.func.max(models.Event.list)).first()
 
-            event = database.Event.create(
+            event = models.Event.create(
                 title = args.title,
                 description = args.description,
                 location = args.location,
@@ -172,9 +172,9 @@ class Posts(restful.Resource):
         else:
 
             posts = DB.session.query(
-                database.Post,
-                sqlalchemy.func.max(database.Post.index)
-            ).group_by(database.Post.list).all()
+                models.Post,
+                sqlalchemy.func.max(models.Post.index)
+            ).group_by(models.Post.list).all()
             
             return list(map(
                 lambda post: 
@@ -197,11 +197,11 @@ class Posts(restful.Resource):
             args = parser.parse_args()
             
             old_post = DB.session.query(
-                database.Post,
-                sqlalchemy.func.max(database.Post.index)
-            ).filter_by(list = post_id).order_by(database.Post.index).one()[0]
+                models.Post,
+                sqlalchemy.func.max(models.Post.index)
+            ).filter_by(list = post_id).order_by(models.Post.index).one()[0]
 
-            post = database.Post.create(
+            post = models.Post.create(
                 title = args.title if args.title else old_post.title,
                 description = args.description if args.description else old_post.description,
                 content = args.content if args.content else old_post.content,
@@ -226,9 +226,9 @@ class Posts(restful.Resource):
             args = parser.parse_args()
             
             list_id, = DB.session.query(
-                sqlalchemy.func.max(database.Post.list)).first()
+                sqlalchemy.func.max(models.Post.list)).first()
 
-            post = database.Post.create(
+            post = models.Post.create(
                 title = args.title,
                 description = args.description,
                 content = args.content,
@@ -268,7 +268,7 @@ class People(restful.Resource):
         
         else:
 
-            people = database.Person.query.all()
+            people = models.Person.query.all()
 
             return list(map(
                 lambda person: 
@@ -327,7 +327,7 @@ class People(restful.Resource):
 
             args = parser.parse_args()
 
-            person = database.Person.create(
+            person = models.Person.create(
                 username = args.username,
                 name = args.name,
                 email = args.email,
@@ -389,7 +389,7 @@ class Memberships(restful.Resource):
             return list(map(
                 lambda membership: 
                     marshal(membership, membership_fields), 
-                database.Membership.query.all()))
+                models.Membership.query.all()))
 
     def post(self, membership_id=None):
        
@@ -440,7 +440,7 @@ class Memberships(restful.Resource):
             if not person:
                 return {'message': 'not a valid person_id'}
 
-            membership = database.Membership.create(
+            membership = models.Membership.create(
                 person = person,
                 start_date = args.start_date,
                 end_date = args.end_date)
@@ -493,7 +493,7 @@ class Officerships(restful.Resource):
             return list(map(
                 lambda officership: 
                     marshal(officership, officership_fields), 
-                database.Officership.query.all()))
+                models.Officership.query.all()))
 
     def post(self, officership_id=None):
 
@@ -546,7 +546,7 @@ class Officerships(restful.Resource):
             if not person:
                 return {'message': 'not a valid person_id'}
 
-            officership = database.Officership.create(
+            officership = models.Officership.create(
                 person = person,
                 title = args.title,
                 start_date = args.start_date,
