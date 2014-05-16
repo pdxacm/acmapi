@@ -18,6 +18,7 @@ from .fields import \
     membership_fields, officership_fields
 from .types import \
     datetime_type, date_type
+from .authentication import AUTH
 
 
 API = restful.Api()
@@ -76,6 +77,7 @@ class Events(restful.Resource):
                     marshal(event[0], event_fields), 
                     events))
 
+    @AUTH.login_required
     def post(self):
         """ To add a resource """
 
@@ -118,6 +120,7 @@ class Events(restful.Resource):
 
         return marshal(event, event_fields) 
 
+    @AUTH.login_required
     def put(self, event_id):
         """ To update a resource """
 
@@ -185,6 +188,7 @@ class Posts(restful.Resource):
                     marshal(post[0], post_fields), 
                     posts))
         
+    @AUTH.login_required
     def post(self):
 
         DB.create_all()
@@ -217,6 +221,7 @@ class Posts(restful.Resource):
 
         return marshal(post, post_fields) 
 
+    @AUTH.login_required
     def put(self, post_id):
         """ To update a resource """
 
@@ -283,6 +288,7 @@ class People(restful.Resource):
                     marshal(person, person_fields), 
                 people))
 
+    @AUTH.login_required
     def post(self):
         
         DB.create_all()
@@ -313,6 +319,7 @@ class People(restful.Resource):
 
         return marshal(person, person_fields)
 
+    @AUTH.login_required
     def put(self, person_id=None, username=None):
 
         DB.create_all()
@@ -363,6 +370,7 @@ class People(restful.Resource):
 
             flask.abort(404)
 
+    @AUTH.login_required
     def delete(self, person_id=None, username=None):
 
         DB.create_all()
@@ -412,6 +420,7 @@ class Memberships(restful.Resource):
                     marshal(membership, membership_fields), 
                 models.Membership.query.all()))
 
+    @AUTH.login_required
     def post(self):
        
         DB.create_all()
@@ -442,6 +451,7 @@ class Memberships(restful.Resource):
         
         return marshal(membership, membership_fields)
 
+    @AUTH.login_required
     def put(self, membership_id):
        
         DB.create_all()
@@ -477,6 +487,7 @@ class Memberships(restful.Resource):
 
         return {'message': 'membership update successful'}
     
+    @AUTH.login_required
     def delete(self, membership_id):
 
         DB.create_all()
@@ -518,6 +529,7 @@ class Officerships(restful.Resource):
                     marshal(officership, officership_fields), 
                 models.Officership.query.all()))
 
+    @AUTH.login_required
     def post(self):
 
         DB.create_all()
@@ -550,6 +562,7 @@ class Officerships(restful.Resource):
 
         return marshal(officership, officership_fields)
 
+    @AUTH.login_required
     def put(self, officership_id):
 
         DB.create_all()
@@ -586,6 +599,7 @@ class Officerships(restful.Resource):
 
         return {'message': 'officership update successful'}
 
+    @AUTH.login_required
     def delete(self, officership_id):
 
         DB.create_all()
