@@ -17,19 +17,46 @@ from acmapi.fields import \
 
 import acmapi
 
-from acmapi import models
-from acmapi.models import DB
-
-from acmapi import resources
+from acmapi import models, resources, DB
 from acmapi.resources import API
+from acmapi.models import Person, Officership
 
+import  base64
+
+HEADERS={
+     'Authorization': 'Basic ' + base64.b64encode("root:1234")
+     }
 
 class test_memberships_resource(unittest.TestCase):
 
+    @freeze_time("2012-01-14 12:00:01")
     def setUp(self):
 
         self.app = acmapi.create_app(SQLALCHEMY_DATABASE_URI='sqlite://')
         self.app.testing = True
+
+        with self.app.test_request_context():
+            DB.create_all()
+            person = Person.create(
+                name = None,
+                username = 'root',
+                email = None,
+                website = None,
+                password = '1234',
+            )
+            DB.session.add(person)
+            DB.session.commit()
+
+            officership = Officership.create(
+                person = person,
+                title = 'Vice Chair',        
+                start_date = datetime.date.today(),
+                end_date = None,
+            )
+
+            DB.session.add(person)
+            DB.session.add(officership)
+            DB.session.commit()
 
     @freeze_time("2012-01-14 12:00:01")
     def test_add_valid_event(self):
@@ -38,15 +65,18 @@ class test_memberships_resource(unittest.TestCase):
 
             response = client.post(
                 'http://localhost:5000/people/',
+                headers = HEADERS,
                 data  = {
                     'username': 'bob',
                     'name': 'Bob Billy',
                     'email': 'bbob@example.com',
                     'website': 'http://bbob.example.com',
+                    'password': 'password1234',
                 })
 
             response = client.post(
                 'http://localhost:5000/events/',
+                headers = HEADERS,
                 data  = {
                     'title': 'Title A',
                     'description': 'Description A',
@@ -81,15 +111,18 @@ class test_memberships_resource(unittest.TestCase):
 
             response = client.post(
                 'http://localhost:5000/people/',
+                headers = HEADERS,
                 data  = {
                     'username': 'bob',
                     'name': 'Bob Billy',
                     'email': 'bbob@example.com',
                     'website': 'http://bbob.example.com',
+                    'password': 'password1234',
                 })
 
             response = client.post(
                 'http://localhost:5000/events/',
+                headers = HEADERS,
                 data  = {
                     'title': 'Title A',
                     'description': 'Description A',
@@ -101,6 +134,7 @@ class test_memberships_resource(unittest.TestCase):
 
             response = client.put(
                 'http://localhost:5000/events/1',
+                headers = HEADERS,
                 data  = {
                     'title': 'Title B',
                     'description': 'Description B',
@@ -170,15 +204,18 @@ class test_memberships_resource(unittest.TestCase):
 
             response = client.post(
                 'http://localhost:5000/people/',
+                headers = HEADERS,
                 data  = {
                     'username': 'bob',
                     'name': 'Bob Billy',
                     'email': 'bbob@example.com',
                     'website': 'http://bbob.example.com',
+                    'password': 'password1234',
                 })
 
             response = client.post(
                 'http://localhost:5000/events/',
+                headers = HEADERS,
                 data  = {
                     'title': 'Title A',
                     'description': 'Description A',
@@ -190,6 +227,7 @@ class test_memberships_resource(unittest.TestCase):
 
             response = client.put(
                 'http://localhost:5000/events/1',
+                headers = HEADERS,
                 data  = {
                     'title': 'Title B',
                     'description': 'Description B',
@@ -199,6 +237,7 @@ class test_memberships_resource(unittest.TestCase):
 
             response = client.post(
                 'http://localhost:5000/events/',
+                headers = HEADERS,
                 data  = {
                     'title': 'Title C',
                     'description': 'Description C',
@@ -210,6 +249,7 @@ class test_memberships_resource(unittest.TestCase):
 
             response = client.put(
                 'http://localhost:5000/events/2',
+                headers = HEADERS,
                 data  = {
                     'title': 'Title D',
                     'description': 'Description D',

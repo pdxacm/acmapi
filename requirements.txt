@@ -1,8 +1,15 @@
 Flask==0.10.1
-Flask-CAS==0.3.0
+Flask-HTTPAuth==2.2.1
 Flask-RESTful==0.2.12
 Flask-SQLAlchemy==1.0
 Jinja2==2.7.2
 MarkupSafe==0.23
+SQLAlchemy==0.9.4
 Werkzeug==0.9.4
+aniso8601==0.82
+freezegun==0.1.17
 itsdangerous==0.24
+passlib==1.6.2
+pytz==2014.2
+six==1.6.1
+wsgiref==0.1.2

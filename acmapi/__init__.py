@@ -9,6 +9,7 @@ __version__ = '0.1.0'
 from .models import DB
 from .resources import \
     API, Root, Events, People, Memberships, Officerships
+from .authentication import AUTH
 
 def create_app(config_files=None, envvars=None, **other):
     app = Flask(__name__)

@@ -1,4 +1,7 @@
 from flask.ext.sqlalchemy import SQLAlchemy
+from passlib.apps import custom_app_context as pwd_context
+
+import datetime
 
 DB = SQLAlchemy()
 
@@ -94,6 +97,7 @@ class Person(DB.Model):
     username = DB.Column(DB.Unicode, unique=True, nullable=False)
     email = DB.Column(DB.Unicode)
     website = DB.Column(DB.Unicode)
+    password_hash = DB.Column(DB.String)
 
     memberships = DB.relationship(
         'Membership', 
@@ -120,18 +124,32 @@ class Person(DB.Model):
     )
     
     @classmethod
-    def create(cls, name, username, email, website):
+    def create(cls, name, username, email, website, password):
 
         x = cls()
         x.name = name
         x.username = username
         x.email = email
         x.website = website
+        x.password = x.hash_password(password)
         return x
 
     def __repr__(self):
         return "<Person({})>".format(self.id)
+    
+    def hash_password(self, password):
+        self.password_hash = pwd_context.encrypt(password)
 
+    def verify_password(self, password):
+        return pwd_context.verify(password, self.password_hash)
+
+    def isCurrentOfficer(self):
+        today = datetime.date.today() 
+        for officership in self.officerships:
+            if today >= officership.start_date and \
+                (not officership.end_date or today <= officership.end_date):
+                    return True
+        return False
 
 class Officership(DB.Model):
     

@@ -76,6 +76,7 @@ class test_fields(unittest.TestCase):
                     username = 'johnd',
                     email = 'johnd@example.com',
                     website = 'http://johnd.com',
+                    password = 'password1234',
                 )
                 
                 DB.session.add(person)
@@ -99,6 +100,7 @@ class test_fields(unittest.TestCase):
                     username = 'johnd',
                     email = 'johnd@example.com',
                     website = 'http://johnd.com',
+                    password = 'password1234',
                 )
 
                 event = models.Event.create(
@@ -152,6 +154,7 @@ class test_fields(unittest.TestCase):
                     username = 'johnd',
                     email = 'johnd@example.com',
                     website = 'http://johnd.com',
+                    password = 'password1234',
                 )
 
                 DB.session.add(person)
@@ -194,6 +197,7 @@ class test_fields(unittest.TestCase):
                     username = 'johnd',
                     email = 'johnd@example.com',
                     website = 'http://johnd.com',
+                    password = 'password1234',
                 )
 
                 DB.session.add(person)
@@ -226,6 +230,7 @@ class test_fields(unittest.TestCase):
                     username = 'johnd',
                     email = 'johnd@example.com',
                     website = 'http://johnd.com',
+                    password = 'password1234',
                 )
 
                 DB.session.add(person)

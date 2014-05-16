@@ -36,6 +36,7 @@ class test_database(unittest.TestCase):
                 username = 'johnd',
                 email = 'johnd@example.com',
                 website = 'http://johnd.com',
+                password = 'password1234',
             )
             
             self.assertEqual(
@@ -88,6 +89,7 @@ class test_database(unittest.TestCase):
                 username = None,
                 email = 'johnd@example.com',
                 website = 'http://johnd.com',
+                password = 'password1234',
             )
             
             self.assertEqual(
@@ -117,6 +119,7 @@ class test_database(unittest.TestCase):
                 username = 'username',
                 email = 'johnd@example.com',
                 website = 'http://johnd.com',
+                password = 'password1234',
             )
             
             person2 = Person.create(
@@ -124,6 +127,7 @@ class test_database(unittest.TestCase):
                 username = 'username',
                 email = 'johnd@example.com',
                 website = 'http://johnd.com',
+                password = 'password1234',
             )
 
             DB.session.add(person1)
@@ -146,6 +150,7 @@ class test_database(unittest.TestCase):
                 username = 'username1',
                 email = 'johnd@example.com',
                 website = 'http://johnd.com',
+                password = 'password1234',
             )
             
             person2 = Person.create(
@@ -153,6 +158,7 @@ class test_database(unittest.TestCase):
                 username = 'username2',
                 email = 'johnd@example.com',
                 website = 'http://johnd.com',
+                password = 'password1234',
             )
 
             DB.session.add(person1)
@@ -177,6 +183,7 @@ class test_database(unittest.TestCase):
                 username = 'johnd',
                 email = 'johnd@example.com',
                 website = 'http://johnd.com',
+                password = 'password1234',
             )
 
             membership = Membership.create(
@@ -211,6 +218,7 @@ class test_database(unittest.TestCase):
                 username = 'johnd',
                 email = 'johnd@example.com',
                 website = 'http://johnd.com',
+                password = 'password1234',
             )
 
             membership = Membership.create(
@@ -245,6 +253,7 @@ class test_database(unittest.TestCase):
                 username = 'johnd',
                 email = 'johnd@example.com',
                 website = 'http://johnd.com',
+                password = 'password1234',
             )
 
             membership = Membership.create(
@@ -292,6 +301,7 @@ class test_database(unittest.TestCase):
                 username = 'johnd',
                 email = 'johnd@example.com',
                 website = 'http://johnd.com',
+                password = 'password1234',
             )
 
             membership = Membership.create(
@@ -319,6 +329,7 @@ class test_database(unittest.TestCase):
                 username = 'johnd',
                 email = 'johnd@example.com',
                 website = 'http://johnd.com',
+                password = 'password1234',
             )
 
             officership = Officership.create(
@@ -354,6 +365,7 @@ class test_database(unittest.TestCase):
                 username = 'johnd',
                 email = 'johnd@example.com',
                 website = 'http://johnd.com',
+                password = 'password1234',
             )
 
             officership = Officership.create(
@@ -389,6 +401,7 @@ class test_database(unittest.TestCase):
                 username = 'johnd',
                 email = 'johnd@example.com',
                 website = 'http://johnd.com',
+                password = 'password1234',
             )
 
             officership = Officership.create(
@@ -417,6 +430,7 @@ class test_database(unittest.TestCase):
                 username = 'johnd',
                 email = 'johnd@example.com',
                 website = 'http://johnd.com',
+                password = 'password1234',
             )
 
             officership = Officership.create(
@@ -445,6 +459,7 @@ class test_database(unittest.TestCase):
                 username = 'johnd',
                 email = 'johnd@example.com',
                 website = 'http://johnd.com',
+                password = 'password1234',
             )
 
             officership = Officership.create(
@@ -494,6 +509,7 @@ class test_database(unittest.TestCase):
                 username = 'johnd',
                 email = 'johnd@example.com',
                 website = 'http://johnd.com',
+                password = 'password1234',
             )
 
             event = Event.create(
@@ -561,6 +577,7 @@ class test_database(unittest.TestCase):
                 username = 'johnd',
                 email = 'johnd@example.com',
                 website = 'http://johnd.com',
+                password = 'password1234',
             )
 
             event = Event.create(
@@ -598,6 +615,7 @@ class test_database(unittest.TestCase):
                 username = 'johnd',
                 email = 'johnd@example.com',
                 website = 'http://johnd.com',
+                password = 'password1234',
             )
 
             event = Event.create(
@@ -636,6 +654,7 @@ class test_database(unittest.TestCase):
                 username = 'johnd',
                 email = 'johnd@example.com',
                 website = 'http://johnd.com',
+                password = 'password1234',
             )
 
             event = Event.create(
@@ -674,6 +693,7 @@ class test_database(unittest.TestCase):
                 username = 'johnd',
                 email = 'johnd@example.com',
                 website = 'http://johnd.com',
+                password = 'password1234',
             )
 
             DB.session.add(person)
@@ -724,6 +744,7 @@ class test_database(unittest.TestCase):
                 username = 'johnd',
                 email = 'johnd@example.com',
                 website = 'http://johnd.com',
+                password = 'password1234',
             )
 
             DB.session.add(person)
@@ -779,6 +800,7 @@ class test_database(unittest.TestCase):
                 username = 'johnd',
                 email = 'johnd@example.com',
                 website = 'http://johnd.com',
+                password = 'password1234',
             )
 
             DB.session.add(person)

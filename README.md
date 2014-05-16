@@ -55,9 +55,11 @@ $ curl http://acm.pdx.edu/api/v1/
 
 ```sh
 $ curl http://acm.pdx.edu/api/v1/people/ \
+    -u root:1234 \
     -d username="foobar" \
     -d name="Foo Bar" \
-    -d email="foobar@example.com"
+    -d email="foobar@example.com" \
+    -d password="password1234"
 ```
 
 ```json
@@ -66,14 +68,17 @@ $ curl http://acm.pdx.edu/api/v1/people/ \
     "id": 2, 
     "name": "Foo Bar", 
     "username": "foobar", 
-    "website": null
+    "website": null,
 }
 ```
 
 #### Add a second user
 
 ```sh
-$ curl http://acm.pdx.edu/api/v1/people/ -d username="war5" 
+$ curl http://acm.pdx.edu/api/v1/people/ \
+    -u root:1234 \
+    -d username="war5" 
+    -d password="password1234"
 ```
 
 ```json
@@ -82,14 +87,16 @@ $ curl http://acm.pdx.edu/api/v1/people/ -d username="war5"
     "id": 2, 
     "name": null, 
     "username": "war5", 
-    "website": null
+    "website": null,
 }
 ```
 
 #### Update user by username
 
 ```sh
-$ curl -X PUT http://acm.pdx.edu/api/v1/people/war5 -d name="Billy Bob" 
+$ curl -X PUT http://acm.pdx.edu/api/v1/people/war5 \
+    -u root:1234 \
+    -d name="Billy Bob" 
 ```
 
 ```json
@@ -106,6 +113,7 @@ $ curl -X PUT http://acm.pdx.edu/api/v1/people/war5 -d name="Billy Bob"
 
 ```sh
 $ curl -X PUT http://acm.pdx.edu/api/v1/people/war5 \
+    -u root:1234 \
     -d email="billybob@example.com" 
 ```
 
@@ -179,7 +187,8 @@ $ curl http://acm.pdx.edu/api/v1/people/foobar
 #### Delete people by username
 
 ```sh
-$ curl -X DELETE http://acm.pdx.edu/api/v1/people/foobar
+$ curl -X DELETE http://acm.pdx.edu/api/v1/people/foobar \
+    -u root:1234 
 ```
 
 ```json
@@ -191,7 +200,8 @@ $ curl -X DELETE http://acm.pdx.edu/api/v1/people/foobar
 #### Delete people by id
 
 ```sh
-$ curl -X DELETE http://acm.pdx.edu/api/v1/people/1
+$ curl -X DELETE http://acm.pdx.edu/api/v1/people/1 \
+    -u root:1234
 ```
 
 ```json
@@ -206,6 +216,7 @@ $ curl -X DELETE http://acm.pdx.edu/api/v1/people/1
 
 ```sh
 $ curl http://acm.pdx.edu/api/v1/memberships/ \
+    -u root:1234 \
     -d person_id=1 \
     -d start_date="2014-10-11" \
     -d end_date="2015-10-11"
@@ -258,7 +269,8 @@ $ curl http://acm.pdx.edu/api/v1/memberships/1
 #### Delete membership by id
 
 ```sh
-$ curl -X DELETE http://acm.pdx.edu/api/v1/memberships/1
+$ curl -X DELETE http://acm.pdx.edu/api/v1/memberships/1 \
+    -u root:1234
 ```
 
 ```json
@@ -273,6 +285,7 @@ $ curl -X DELETE http://acm.pdx.edu/api/v1/memberships/1
 
 ```sh
 $ curl http://acm.pdx.edu/api/v1/officerships/ \
+    -u root:1234 \
     -d person_id=1 \
     -d title="Vice Chair" \
     -d start_date="2014-10-11" \
@@ -329,7 +342,8 @@ $ curl http://acm.pdx.edu/api/v1/officerships/1
 #### Delete membership by id
 
 ```sh
-$ curl -X DELETE http://acm.pdx.edu/api/v1/officerships/1
+$ curl -X DELETE http://acm.pdx.edu/api/v1/officerships/1 \
+    -u root:1234
 ```
 
 ```json
@@ -344,6 +358,7 @@ $ curl -X DELETE http://acm.pdx.edu/api/v1/officerships/1
 
 ```sh
 $ curl http://acm.pdx.edu/api/v1/events/ \
+    -u root:1234 \
     -d title="Event Title 1" \
     -d description="Event 1" \
     -d location="Room 1" \
@@ -372,6 +387,7 @@ $ curl http://acm.pdx.edu/api/v1/events/ \
 
 ```sh
 $ curl http://acm.pdx.edu/api/v1/events/ \
+    -u root:1234 \
     -d title="Event Title 2" \
     -d description="Event 2" \
     -d location="Room 2" \
@@ -401,7 +417,8 @@ $ curl http://acm.pdx.edu/api/v1/events/ \
 #### Update Events by id
 
 ```sh
-$ curl -X PUT http://acm.pdx.edu/api/v1/events/1 -d canceled=True
+$ curl -X PUT http://acm.pdx.edu/api/v1/events/1 -d canceled=True \
+    -u root:1234 \
 ```
 
 ```json
@@ -510,6 +527,7 @@ $ curl http://acm.pdx.edu/api/v1/events/1
 
 ```sh
 $ curl http://acm.pdx.edu/api/v1/posts/ \
+    -u root:1234 \
     -d title="This is the Title" \
     -d description="This is the description" \
     -d content="This is the content" 
@@ -531,6 +549,7 @@ $ curl http://acm.pdx.edu/api/v1/posts/ \
 
 ```sh
 $ curl http://acm.pdx.edu/api/v1/posts/ \
+    -u root:1234 \
     -d title="This is another Title" \
     -d description="This is another description" \
     -d content="This is some more content" 
@@ -553,7 +572,8 @@ $ curl http://acm.pdx.edu/api/v1/posts/ \
 #### Update Posts by id
 
 ```sh
-$ curl -X PUT http://acm.pdx.edu/api/v1/posts/1 -d canceled=True
+$ curl -X PUT http://acm.pdx.edu/api/v1/posts/1 -d canceled=True \
+    -u root:1234 
 ```
 
 ```json
