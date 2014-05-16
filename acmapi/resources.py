@@ -99,7 +99,7 @@ class Events(restful.Resource):
         
         list_id, = DB.session.query(
             sqlalchemy.func.max(models.Event.list)).first()
-
+        
         event = models.Event.create(
             title = args.title,
             description = args.description,
@@ -109,7 +109,7 @@ class Events(restful.Resource):
             canceled = args.canceled,
             start = args.start,
             end = args.end,
-            editor = _get_person_by_id(1),
+            editor = flask.g.person,
             edited_datetime = datetime.datetime.now(),
             index = 1,
             list = list_id+1 if list_id else 1,
@@ -153,7 +153,7 @@ class Events(restful.Resource):
             canceled = args.canceled or old_event.canceled,
             start = args.start or old_event.start,
             end = args.end or old_event.end,
-            editor = _get_person_by_id(1),
+            editor = flask.g.person,
             edited_datetime = datetime.datetime.now(),
             index = old_event.index + 1,
             list = old_event.list,
@@ -210,7 +210,7 @@ class Posts(restful.Resource):
             description = args.description,
             content = args.content,
             hidden = args.hidden,
-            editor = _get_person_by_id(1),
+            editor = flask.g.person,
             edited_datetime = datetime.datetime.now(),
             index = 1,
             list = list_id+1 if list_id else 1,
@@ -246,7 +246,7 @@ class Posts(restful.Resource):
             description = args.description or old_post.description,
             content = args.content or old_post.content,
             hidden = args.hidden or old_post.hidden,
-            editor = _get_person_by_id(1),
+            editor = flask.g.person,
             edited_datetime = datetime.datetime.now(),
             index = old_post.index + 1,
             list = old_post.list,
