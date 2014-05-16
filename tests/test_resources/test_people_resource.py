@@ -6,6 +6,8 @@ import json
 
 import datetime
 
+from freezegun import freeze_time
+
 from flask import Flask
 
 from flask.ext.restful import fields, marshal
@@ -19,7 +21,7 @@ import acmapi
 
 from acmapi import models, resources, DB
 from acmapi.resources import API
-from acmapi.models import Person
+from acmapi.models import Person, Officership
 
 import  base64
 
@@ -29,6 +31,7 @@ HEADERS={
 
 class test_people_resource(unittest.TestCase):
 
+    @freeze_time("2012-01-14 12:00:01")
     def setUp(self):
 
         self.app = acmapi.create_app(SQLALCHEMY_DATABASE_URI='sqlite://')
@@ -46,6 +49,18 @@ class test_people_resource(unittest.TestCase):
             DB.session.add(person)
             DB.session.commit()
 
+            officership = Officership.create(
+                person = person,
+                title = 'Vice Chair',        
+                start_date = datetime.date.today(),
+                end_date = None,
+            )
+
+            DB.session.add(person)
+            DB.session.add(officership)
+            DB.session.commit()
+
+    @freeze_time("2012-01-14 12:00:01")
     def test_add_unique_person(self):
         
         with self.app.test_client() as client:
@@ -70,6 +85,7 @@ class test_people_resource(unittest.TestCase):
                     'website': 'http://bbob.example.com',
                 })
 
+    @freeze_time("2012-01-14 12:00:01")
     def test_add_duplicate_person(self):
         
         with self.app.test_client() as client:
@@ -101,6 +117,7 @@ class test_people_resource(unittest.TestCase):
                     'message': 'username already exists'
                 })
 
+    @freeze_time("2012-01-14 12:00:01")
     def test_find_existing_person_by_id(self):
         
         with self.app.test_client() as client:
@@ -128,6 +145,7 @@ class test_people_resource(unittest.TestCase):
                     'website': 'http://bbob.example.com',
                 })
 
+    @freeze_time("2012-01-14 12:00:01")
     def test_find_existing_person_by_username(self):
         
         with self.app.test_client() as client:
@@ -155,6 +173,7 @@ class test_people_resource(unittest.TestCase):
                     'website': 'http://bbob.example.com',
                 })
 
+    @freeze_time("2012-01-14 12:00:01")
     def test_find_non_existing_person_by_id(self):
         
         with self.app.test_client() as client:
@@ -168,6 +187,7 @@ class test_people_resource(unittest.TestCase):
                     'message': 'person not found',
                 })
 
+    @freeze_time("2012-01-14 12:00:01")
     def test_find_non_existing_person_by_username(self):
         
         with self.app.test_client() as client:
@@ -181,6 +201,7 @@ class test_people_resource(unittest.TestCase):
                     'message': 'person not found',
                 })
 
+    @freeze_time("2012-01-14 12:00:01")
     def test_list_everything_0(self):
         with self.app.test_client() as client:
             
@@ -196,6 +217,7 @@ class test_people_resource(unittest.TestCase):
                     'website': None,
                     }])
 
+    @freeze_time("2012-01-14 12:00:01")
     def test_list_everything_1(self):
         with self.app.test_client() as client:
             
@@ -230,6 +252,7 @@ class test_people_resource(unittest.TestCase):
                     'website': 'http://bbob.example.com',
                 }])
 
+    @freeze_time("2012-01-14 12:00:01")
     def test_list_everything_2(self):
         with self.app.test_client() as client:
             
@@ -282,6 +305,7 @@ class test_people_resource(unittest.TestCase):
                     'website': 'http://foobar.example.com',
                 }])
 
+    @freeze_time("2012-01-14 12:00:01")
     def test_delete_existing_by_id(self):
         with self.app.test_client() as client:
             
@@ -316,6 +340,7 @@ class test_people_resource(unittest.TestCase):
                     'website': None,
                     }])
 
+    @freeze_time("2012-01-14 12:00:01")
     def test_delete_existing_by_username(self):
         with self.app.test_client() as client:
             
@@ -350,6 +375,7 @@ class test_people_resource(unittest.TestCase):
                     'website': None,
                     }])
 
+    @freeze_time("2012-01-14 12:00:01")
     def test_delete_non_existing_by_id(self):
         with self.app.test_client() as client:
             
@@ -373,6 +399,7 @@ class test_people_resource(unittest.TestCase):
                     'website': None,
                     }])
 
+    @freeze_time("2012-01-14 12:00:01")
     def test_delete_non_existing_by_username(self):
         with self.app.test_client() as client:
             
@@ -396,6 +423,7 @@ class test_people_resource(unittest.TestCase):
                     'website': None,
                     }])
 
+    @freeze_time("2012-01-14 12:00:01")
     def test_invalid_delete(self):
         with self.app.test_client() as client:
             
@@ -419,6 +447,7 @@ class test_people_resource(unittest.TestCase):
                     'website': None,
                     }])
 
+    @freeze_time("2012-01-14 12:00:01")
     def test_update_existing_person_by_id(self):
         with self.app.test_client() as client:
 
@@ -460,6 +489,7 @@ class test_people_resource(unittest.TestCase):
                     'website': 'http://jbob.example.com',
                 })
 
+    @freeze_time("2012-01-14 12:00:01")
     def test_update_existing_person_by_username(self):
         with self.app.test_client() as client:
 
@@ -501,6 +531,7 @@ class test_people_resource(unittest.TestCase):
                     'website': 'http://jbob.example.com',
                 })
 
+    @freeze_time("2012-01-14 12:00:01")
     def test_update_non_existing_person_by_id(self):
         with self.app.test_client() as client:
 
@@ -520,6 +551,7 @@ class test_people_resource(unittest.TestCase):
                 { 'message': 'person not found' })
 
 
+    @freeze_time("2012-01-14 12:00:01")
     def test_update_non_existing_person_by_username(self):
         with self.app.test_client() as client:
 

@@ -6,6 +6,8 @@ import json
 
 import datetime
 
+from freezegun import freeze_time
+
 from flask import Flask
 
 from flask.ext.restful import fields, marshal
@@ -19,7 +21,7 @@ import acmapi
 
 from acmapi import models, resources, DB
 from acmapi.resources import API
-from acmapi.models import Person
+from acmapi.models import Person, Officership
 
 import  base64
 
@@ -29,6 +31,7 @@ HEADERS={
 
 class test_memberships_resource(unittest.TestCase):
 
+    @freeze_time("2012-01-14 12:00:01")
     def setUp(self):
 
         self.app = acmapi.create_app(SQLALCHEMY_DATABASE_URI='sqlite://')
@@ -46,7 +49,18 @@ class test_memberships_resource(unittest.TestCase):
             DB.session.add(person)
             DB.session.commit()
 
+            officership = Officership.create(
+                person = person,
+                title = 'Vice Chair',        
+                start_date = datetime.date.today(),
+                end_date = None,
+            )
 
+            DB.session.add(person)
+            DB.session.add(officership)
+            DB.session.commit()
+
+    @freeze_time("2012-01-14 12:00:01")
     def test_add_valid_membership(self):
         
         with self.app.test_client() as client:
@@ -81,6 +95,7 @@ class test_memberships_resource(unittest.TestCase):
                     'end_date': '2014-04-12',
                 })
 
+    @freeze_time("2012-01-14 12:00:01")
     def test_add_invalid_membership(self):
         
         with self.app.test_client() as client:
@@ -110,6 +125,7 @@ class test_memberships_resource(unittest.TestCase):
                 {'message': 'start_date must be less than end_date'})
 
 
+    @freeze_time("2012-01-14 12:00:01")
     def test_delete_existing_membership(self):
         
         with self.app.test_client() as client:
@@ -148,6 +164,7 @@ class test_memberships_resource(unittest.TestCase):
                 json.loads(response.data),
                 [])
 
+    @freeze_time("2012-01-14 12:00:01")
     def test_delete_non_existing_membership(self):
         
         with self.app.test_client() as client:
@@ -160,6 +177,7 @@ class test_memberships_resource(unittest.TestCase):
                 json.loads(response.data),
                 {'message': 'delete failed, membership not found'})
 
+    @freeze_time("2012-01-14 12:00:01")
     def test_list_all_memberships_1(self):
         
         with self.app.test_client() as client:
@@ -197,6 +215,7 @@ class test_memberships_resource(unittest.TestCase):
                     'end_date': '2014-04-12',
                 }])
                 
+    @freeze_time("2012-01-14 12:00:01")
     def test_update_existing_membership(self):
         
         with self.app.test_client() as client:
@@ -233,6 +252,7 @@ class test_memberships_resource(unittest.TestCase):
                 json.loads(response.data),
                 {'message': 'membership update successful'})
 
+    @freeze_time("2012-01-14 12:00:01")
     def test_update_existing_membership_invalid(self):
         
         with self.app.test_client() as client:
@@ -269,6 +289,7 @@ class test_memberships_resource(unittest.TestCase):
                 json.loads(response.data),
                 {'message': 'start_date must be less than end_date'})
 
+    @freeze_time("2012-01-14 12:00:01")
     def test_update_non_existing_membership(self):
         
         with self.app.test_client() as client:

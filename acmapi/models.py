@@ -1,6 +1,8 @@
 from flask.ext.sqlalchemy import SQLAlchemy
 from passlib.apps import custom_app_context as pwd_context
 
+import datetime
+
 DB = SQLAlchemy()
 
 class Event(DB.Model):
@@ -140,6 +142,14 @@ class Person(DB.Model):
 
     def verify_password(self, password):
         return pwd_context.verify(password, self.password_hash)
+
+    def isCurrentOfficer(self):
+        today = datetime.date.today() 
+        for officership in self.officerships:
+            if today >= officership.start_date and \
+                (not officership.end_date or today <= officership.end_date):
+                    return True
+        return False
 
 class Officership(DB.Model):
     
