@@ -142,14 +142,14 @@ class Events(restful.Resource):
         ).filter_by(list = event_id).order_by(models.Event.index).one()[0]
 
         event = models.Event.create(
-            title = args.title if args.title else old_event.title,
-            description = args.description if args.description else old_event.description,
-            speaker = args.speaker if args.speaker else old_event.speaker,
-            location = args.location if args.location else old_event.location,
-            hidden = args.hidden if args.hidden else old_event.hidden,
-            canceled = args.canceled if args.canceled else old_event.canceled,
-            start = args.start if args.start else old_event.start,
-            end = args.end if args.end else old_event.end,
+            title = args.title or old_event.title,
+            description = args.description or old_event.description,
+            speaker = args.speaker or old_event.speaker,
+            location = args.location or old_event.location,
+            hidden = args.hidden or old_event.hidden,
+            canceled = args.canceled or old_event.canceled,
+            start = args.start or old_event.start,
+            end = args.end or old_event.end,
             editor = _get_person_by_id(1),
             edited_datetime = datetime.datetime.now(),
             index = old_event.index + 1,
@@ -237,10 +237,10 @@ class Posts(restful.Resource):
         ).filter_by(list = post_id).order_by(models.Post.index).one()[0]
 
         post = models.Post.create(
-            title = args.title if args.title else old_post.title,
-            description = args.description if args.description else old_post.description,
-            content = args.content if args.content else old_post.content,
-            hidden = args.hidden if args.hidden else old_post.hidden,
+            title = args.title or old_post.title,
+            description = args.description or old_post.description,
+            content = args.content or old_post.content,
+            hidden = args.hidden or old_post.hidden,
             editor = _get_person_by_id(1),
             edited_datetime = datetime.datetime.now(),
             index = old_post.index + 1,
