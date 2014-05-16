@@ -293,6 +293,7 @@ class People(restful.Resource):
         parser.add_argument('name', type=str)
         parser.add_argument('email', type=str)
         parser.add_argument('website', type=str)
+        parser.add_argument('password', type=str, required=True)
 
         args = parser.parse_args()
 
@@ -300,7 +301,8 @@ class People(restful.Resource):
             username = args.username,
             name = args.name,
             email = args.email,
-            website = args.website)
+            website = args.website,
+            password = args.password)
         
         DB.session.add(person)
 
@@ -323,6 +325,7 @@ class People(restful.Resource):
             parser.add_argument('name', type=str)
             parser.add_argument('email', type=str)
             parser.add_argument('website', type=str)
+            parser.add_argument('password', type=str)
 
             args = parser.parse_args()
 
@@ -346,6 +349,8 @@ class People(restful.Resource):
                 person.email = args.email
             if args.website:
                 person.website = args.website
+            if args.password:
+                person.password_hash = person.hash_password(args.password)
             
             try:
                 DB.session.commit()

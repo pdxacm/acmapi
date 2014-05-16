@@ -40,6 +40,7 @@ class test_people_resource(unittest.TestCase):
                     'name': 'Bob Billy',
                     'email': 'bbob@example.com',
                     'website': 'http://bbob.example.com',
+                    'password': 'password1234',
                 })
         
             self.assertEqual(
@@ -62,6 +63,7 @@ class test_people_resource(unittest.TestCase):
                     'name': 'Bob Billy',
                     'email': 'bbob@example.com',
                     'website': 'http://bbob.example.com',
+                    'password': 'password1234',
                 })
         
             response = client.post(
@@ -71,6 +73,7 @@ class test_people_resource(unittest.TestCase):
                     'name': 'Bob Billy',
                     'email': 'bbob@example.com',
                     'website': 'http://bbob.example.com',
+                    'password': 'password1234',
                 })
         
             self.assertEqual(
@@ -89,6 +92,7 @@ class test_people_resource(unittest.TestCase):
                     'name': 'Bob Billy',
                     'email': 'bbob@example.com',
                     'website': 'http://bbob.example.com',
+                    'password': 'password1234',
                 })
             
             response = client.get(
@@ -114,6 +118,7 @@ class test_people_resource(unittest.TestCase):
                     'name': 'Bob Billy',
                     'email': 'bbob@example.com',
                     'website': 'http://bbob.example.com',
+                    'password': 'password1234',
                 })
             
             response = client.get(
@@ -174,6 +179,7 @@ class test_people_resource(unittest.TestCase):
                     'name': 'Bob Billy',
                     'email': 'bbob@example.com',
                     'website': 'http://bbob.example.com',
+                    'password': 'password1234',
                 })
 
             response = client.get(
@@ -199,6 +205,7 @@ class test_people_resource(unittest.TestCase):
                     'name': 'Bob Billy',
                     'email': 'bbob@example.com',
                     'website': 'http://bbob.example.com',
+                    'password': 'password1234',
                 })
 
             response = client.post(
@@ -208,6 +215,7 @@ class test_people_resource(unittest.TestCase):
                     'name': 'Foo Bar',
                     'email': 'foobar@example.com',
                     'website': 'http://foobar.example.com',
+                    'password': 'password1234',
                 })
 
             response = client.get(
@@ -240,6 +248,7 @@ class test_people_resource(unittest.TestCase):
                     'name': 'Bob Billy',
                     'email': 'bbob@example.com',
                     'website': 'http://bbob.example.com',
+                    'password': 'password1234',
                 })
 
             response = client.delete(
@@ -265,6 +274,7 @@ class test_people_resource(unittest.TestCase):
                     'name': 'Bob Billy',
                     'email': 'bbob@example.com',
                     'website': 'http://bbob.example.com',
+                    'password': 'password1234',
                 })
 
             response = client.delete(
@@ -338,6 +348,7 @@ class test_people_resource(unittest.TestCase):
                     'name': 'Bob Billy',
                     'email': 'bbob@example.com',
                     'website': 'http://bbob.example.com',
+                    'password': 'password1234',
                 })
 
             response = client.put(
@@ -376,6 +387,7 @@ class test_people_resource(unittest.TestCase):
                     'name': 'Bob Billy',
                     'email': 'bbob@example.com',
                     'website': 'http://bbob.example.com',
+                    'password': 'password1234',
                 })
 
             response = client.put(
@@ -414,6 +426,7 @@ class test_people_resource(unittest.TestCase):
                     'name': 'Jim Billy',
                     'email': 'jbob@example.com',
                     'website': 'http://jbob.example.com',
+                    'password': 'password1234',
                 })
         
             self.assertEqual(
@@ -432,6 +445,7 @@ class test_people_resource(unittest.TestCase):
                     'name': 'Jim Billy',
                     'email': 'jbob@example.com',
                     'website': 'http://jbob.example.com',
+                    'password': 'password1234',
                 })
         
             self.assertEqual(

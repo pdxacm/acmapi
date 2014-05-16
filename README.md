@@ -57,7 +57,8 @@ $ curl http://acm.pdx.edu/api/v1/
 $ curl http://acm.pdx.edu/api/v1/people/ \
     -d username="foobar" \
     -d name="Foo Bar" \
-    -d email="foobar@example.com"
+    -d email="foobar@example.com" \
+    -d password="password1234"
 ```
 
 ```json
@@ -66,14 +67,16 @@ $ curl http://acm.pdx.edu/api/v1/people/ \
     "id": 2, 
     "name": "Foo Bar", 
     "username": "foobar", 
-    "website": null
+    "website": null,
 }
 ```
 
 #### Add a second user
 
 ```sh
-$ curl http://acm.pdx.edu/api/v1/people/ -d username="war5" 
+$ curl http://acm.pdx.edu/api/v1/people/ \
+    -d username="war5" 
+    -d password="password1234"
 ```
 
 ```json
@@ -82,7 +85,7 @@ $ curl http://acm.pdx.edu/api/v1/people/ -d username="war5"
     "id": 2, 
     "name": null, 
     "username": "war5", 
-    "website": null
+    "website": null,
 }
 ```
 

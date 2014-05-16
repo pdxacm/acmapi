@@ -43,6 +43,7 @@ class test_memberships_resource(unittest.TestCase):
                     'name': 'Bob Billy',
                     'email': 'bbob@example.com',
                     'website': 'http://bbob.example.com',
+                    'password': 'password1234',
                 })
 
             response = client.post(
@@ -79,6 +80,7 @@ class test_memberships_resource(unittest.TestCase):
                     'name': 'Bob Billy',
                     'email': 'bbob@example.com',
                     'website': 'http://bbob.example.com',
+                    'password': 'password1234',
                 })
 
             response = client.post(
@@ -157,6 +159,7 @@ class test_memberships_resource(unittest.TestCase):
                     'name': 'Bob Billy',
                     'email': 'bbob@example.com',
                     'website': 'http://bbob.example.com',
+                    'password': 'password1234',
                 })
 
             response = client.post(
