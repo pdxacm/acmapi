@@ -5,6 +5,15 @@ acmapi
 
 API for the @acmpdx
 
+## Methods
+
+| HTTP method | Description                 |
+|-------------|-----------------------------|
+| GET         | To view a resource(s)       |
+| PUSH        | To add a resource           |
+| POST        | To update/change a resource |
+| DELETE      | To delete/remove a resource |
+
 ## Examples
 
 ### Top Level
@@ -80,7 +89,7 @@ $ curl http://acm.pdx.edu/api/v1/people/ -d username="war5"
 #### Update user by username
 
 ```sh
-$ curl http://acm.pdx.edu/api/v1/people/war5 -d name="Billy Bob" 
+$ curl -X PUT http://acm.pdx.edu/api/v1/people/war5 -d name="Billy Bob" 
 ```
 
 ```json
@@ -96,7 +105,7 @@ $ curl http://acm.pdx.edu/api/v1/people/war5 -d name="Billy Bob"
 #### Update user by id
 
 ```sh
-$ curl http://acm.pdx.edu/api/v1/people/war5 \
+$ curl -X PUT http://acm.pdx.edu/api/v1/people/war5 \
     -d email="billybob@example.com" 
 ```
 
@@ -392,7 +401,7 @@ $ curl http://acm.pdx.edu/api/v1/events/ \
 #### Update Events by id
 
 ```sh
-$ curl http://acm.pdx.edu/api/v1/events/1 -d canceled=True
+$ curl -X PUT http://acm.pdx.edu/api/v1/events/1 -d canceled=True
 ```
 
 ```json
@@ -544,7 +553,7 @@ $ curl http://acm.pdx.edu/api/v1/posts/ \
 #### Update Posts by id
 
 ```sh
-$ curl http://acm.pdx.edu/api/v1/posts/1 -d canceled=True
+$ curl -X PUT http://acm.pdx.edu/api/v1/posts/1 -d canceled=True
 ```
 
 ```json

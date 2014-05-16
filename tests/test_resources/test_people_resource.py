@@ -340,7 +340,7 @@ class test_people_resource(unittest.TestCase):
                     'website': 'http://bbob.example.com',
                 })
 
-            response = client.post(
+            response = client.put(
                 'http://localhost:5000/people/1',
                 data  = {
                     'username': 'bob',
@@ -378,7 +378,7 @@ class test_people_resource(unittest.TestCase):
                     'website': 'http://bbob.example.com',
                 })
 
-            response = client.post(
+            response = client.put(
                 'http://localhost:5000/people/bob',
                 data  = {
                     'username': 'bob',
@@ -407,7 +407,7 @@ class test_people_resource(unittest.TestCase):
     def test_update_non_existing_person_by_id(self):
         with self.app.test_client() as client:
 
-            response = client.post(
+            response = client.put(
                 'http://localhost:5000/people/1',
                 data  = {
                     'username': 'bob',
@@ -425,7 +425,7 @@ class test_people_resource(unittest.TestCase):
         with self.app.test_client() as client:
 
 
-            response = client.post(
+            response = client.put(
                 'http://localhost:5000/people/bob',
                 data  = {
                     'username': 'bob',

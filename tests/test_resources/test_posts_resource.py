@@ -89,7 +89,7 @@ class test_memberships_resource(unittest.TestCase):
                     'content': 'This is Post 1 content',
                 })
 
-            response = client.post(
+            response = client.put(
                 'http://localhost:5000/posts/1',
                 data  = {
                     'title': 'Title B',
@@ -167,7 +167,7 @@ class test_memberships_resource(unittest.TestCase):
                     'content': 'This is Post 1 content',
                 })
 
-            response = client.post(
+            response = client.put(
                 'http://localhost:5000/posts/1',
                 data  = {
                     'title': 'Title B',
@@ -183,7 +183,7 @@ class test_memberships_resource(unittest.TestCase):
                     'content': 'This is Post 1 content',
                 })
 
-            response = client.post(
+            response = client.put(
                 'http://localhost:5000/posts/2',
                 data  = {
                     'title': 'Title D',

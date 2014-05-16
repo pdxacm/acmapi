@@ -193,7 +193,7 @@ class test_officerships_resource(unittest.TestCase):
                     'end_date': '2014-04-12',
                 })
 
-            response = client.post(
+            response = client.put(
                 'http://localhost:5000/officerships/1',
                 data  = {
                     'start_date': '2014-04-12',
@@ -226,7 +226,7 @@ class test_officerships_resource(unittest.TestCase):
                     'end_date': '2014-04-12',
                 })
 
-            response = client.post(
+            response = client.put(
                 'http://localhost:5000/officerships/1',
                 data  = {
                     'start_date': '2014-04-13',
@@ -241,7 +241,7 @@ class test_officerships_resource(unittest.TestCase):
         
         with self.app.test_client() as client:
             
-            response = client.post(
+            response = client.put(
                 'http://localhost:5000/officerships/1',
                 data  = {
                     'start_date': '2014-04-12',
