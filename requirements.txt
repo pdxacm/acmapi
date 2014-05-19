@@ -7,9 +7,10 @@ MarkupSafe==0.23
 SQLAlchemy==0.9.4
 Werkzeug==0.9.4
 aniso8601==0.82
-freezegun==0.1.17
+gunicorn==18.0
 itsdangerous==0.24
 passlib==1.6.2
+psycopg2==2.5.3
 pytz==2014.2
 six==1.6.1
 wsgiref==0.1.2

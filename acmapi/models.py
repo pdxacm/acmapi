@@ -20,8 +20,8 @@ class Event(DB.Model):
     end = DB.Column(DB.DateTime, nullable=False)
     canceled = DB.Column(DB.Boolean, nullable=False)
     hidden = DB.Column(DB.Boolean, nullable=False)
-    list = DB.Column(DB.Integer, nullable=False)
-    index = DB.Column(DB.Integer, nullable=False)
+    list = DB.Column(DB.Integer, nullable=False, index=True)
+    index = DB.Column(DB.Integer, nullable=False, index=True)
     
     __table_args__ = (
         DB.UniqueConstraint(list, index),
@@ -62,8 +62,8 @@ class Post(DB.Model):
     editor_id = DB.Column(DB.Integer, DB.ForeignKey('people.id'), nullable=None)
     edited_datetime = DB.Column(DB.DateTime, nullable=None)
     hidden = DB.Column(DB.Boolean, nullable=None)
-    list = DB.Column(DB.Integer, nullable=False)
-    index = DB.Column(DB.Integer, nullable=False)
+    list = DB.Column(DB.Integer, nullable=False, index=True)
+    index = DB.Column(DB.Integer, nullable=False, index=True)
     
     __table_args__ = (
         DB.UniqueConstraint(list, index),

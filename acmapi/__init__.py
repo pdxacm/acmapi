@@ -1,6 +1,8 @@
 from flask import Flask
 from flask.ext import restful
 
+import os
+
 DATETIME_FORMAT = "%Y-%m-%d %H:%M:%S.%f"
 DATE_FORMAT = '%Y-%m-%d'
 
@@ -11,14 +13,17 @@ from .resources import \
     API, Root, Events, People, Memberships, Officerships
 from .authentication import AUTH
 
-def create_app(config_files=None, envvars=None, **other):
+def create_app(config_files=None, envvars_files=None, *envvars, **other):
     app = Flask(__name__)
     
     for i in iterable(config_files):
         app.config.from_pyfile(i)
 
-    for i in iterable(envvars): 
+    for i in iterable(envvars_files): 
         app.config.from_envvar(i)
+    
+    for i in iterable(envvars):
+        app.config[i] = os.environ[i]
 
     for key, value in other.items():
         app.config[key] = value
