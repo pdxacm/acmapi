@@ -66,16 +66,22 @@ class Events(restful.Resource):
             return marshal(event, event_fields)
 
         else:
+        
+                
+            sub = DB.session.query(
+                models.Event.list,
+                sqlalchemy.func.max(models.Event.index).label('max_index')
+            ).group_by(models.Event.list).subquery()
 
-            events = DB.session.query(
-                models.Event,
-                sqlalchemy.func.max(models.Event.index)
-            ).group_by(models.Event.list).all()
+            events = DB.session.query(models.Event)\
+                    .join(sub, models.Event.index==sub.c.max_index)\
+                    .filter(models.Event.list==sub.c.list)\
+                    .all()
             
             return list(map(
                 lambda event: 
-                    marshal(event[0], event_fields), 
-                    events))
+                    marshal(event, event_fields), 
+                        events))
 
     @AUTH.login_required
     def post(self):
@@ -139,29 +145,42 @@ class Events(restful.Resource):
 
         args = parser.parse_args()
         
-        old_event = DB.session.query(
-            models.Event,
-            sqlalchemy.func.max(models.Event.index)
-        ).filter_by(list = event_id).order_by(models.Event.index).one()[0]
-
-        event = models.Event.create(
-            title = args.title or old_event.title,
-            description = args.description or old_event.description,
-            speaker = args.speaker or old_event.speaker,
-            location = args.location or old_event.location,
-            hidden = args.hidden or old_event.hidden,
-            canceled = args.canceled or old_event.canceled,
-            start = args.start or old_event.start,
-            end = args.end or old_event.end,
-            editor = flask.g.person,
-            edited_datetime = datetime.datetime.now(),
-            index = old_event.index + 1,
-            list = old_event.list,
-        )
+        sub = DB.session.query(
+            models.Event.list,
+            sqlalchemy.func.max(models.Event.index).label('max_index')
+        ).group_by(models.Event.list)\
+         .filter(models.Event.list==event_id)\
+         .subquery()
         
-        DB.session.commit()
+        try:
+            old_event = DB.session.query(models.Event)\
+                .join(sub, models.Event.index==sub.c.max_index)\
+                .filter(models.Event.list==sub.c.list)\
+                .one()
+        except NoResultFound:
 
-        return marshal(event, event_fields)
+            pass
+
+        else:
+
+            event = models.Event.create(
+                title = args.title or old_event.title,
+                description = args.description or old_event.description,
+                speaker = args.speaker or old_event.speaker,
+                location = args.location or old_event.location,
+                hidden = args.hidden or old_event.hidden,
+                canceled = args.canceled or old_event.canceled,
+                start = args.start or old_event.start,
+                end = args.end or old_event.end,
+                editor = flask.g.person,
+                edited_datetime = datetime.datetime.now(),
+                index = old_event.index + 1,
+                list = old_event.list,
+            )
+            
+            DB.session.commit()
+
+            return marshal(event, event_fields)
 
 
 class Posts(restful.Resource):
@@ -178,14 +197,20 @@ class Posts(restful.Resource):
 
         else:
 
-            posts = DB.session.query(
-                models.Post,
-                sqlalchemy.func.max(models.Post.index)
-            ).group_by(models.Post.list).all()
-            
+            sub = DB.session.query(
+                models.Post.list,
+                sqlalchemy.func.max(models.Post.index).label('max_index')
+            ).group_by(models.Post.list).subquery()
+
+        
+            posts = DB.session.query(models.Post)\
+                .join(sub, models.Post.index==sub.c.max_index)\
+                .filter(models.Post.list==sub.c.list)\
+                .all()
+
             return list(map(
                 lambda post: 
-                    marshal(post[0], post_fields), 
+                    marshal(post, post_fields), 
                     posts))
         
     @AUTH.login_required
@@ -236,25 +261,38 @@ class Posts(restful.Resource):
 
         args = parser.parse_args()
         
-        old_post = DB.session.query(
-            models.Post,
-            sqlalchemy.func.max(models.Post.index)
-        ).filter_by(list = post_id).order_by(models.Post.index).one()[0]
-
-        post = models.Post.create(
-            title = args.title or old_post.title,
-            description = args.description or old_post.description,
-            content = args.content or old_post.content,
-            hidden = args.hidden or old_post.hidden,
-            editor = flask.g.person,
-            edited_datetime = datetime.datetime.now(),
-            index = old_post.index + 1,
-            list = old_post.list,
-        )
+        sub = DB.session.query(
+            models.Post.list,
+            sqlalchemy.func.max(models.Post.index).label('max_index')
+        ).group_by(models.Post.list)\
+         .filter(models.Post.list==post_id)\
+         .subquery()
         
-        DB.session.commit()
+        try:
+            old_post = DB.session.query(models.Post)\
+                    .join(sub, models.Post.index==sub.c.max_index)\
+                    .filter(models.Post.list==sub.c.list)\
+                    .one()
 
-        return marshal(post, post_fields)
+        except NoResultFound:
+            pass
+
+        else:
+
+            post = models.Post.create(
+                title = args.title or old_post.title,
+                description = args.description or old_post.description,
+                content = args.content or old_post.content,
+                hidden = args.hidden or old_post.hidden,
+                editor = flask.g.person,
+                edited_datetime = datetime.datetime.now(),
+                index = old_post.index + 1,
+                list = old_post.list,
+            )
+            
+            DB.session.commit()
+
+            return marshal(post, post_fields)
 
 
 class People(restful.Resource):
@@ -429,7 +467,7 @@ class Memberships(restful.Resource):
 
         parser.add_argument('person_id', type=int, required=True)
         parser.add_argument('start_date', type=date_type, required=True)
-        parser.add_argument('end_date', type=date_type, required=True)
+        parser.add_argument('end_date', type=date_type)
         
         args = parser.parse_args()
 
@@ -539,7 +577,7 @@ class Officerships(restful.Resource):
         parser.add_argument('person_id', type=int, required=True)
         parser.add_argument('title', type=str, required=True)
         parser.add_argument('start_date', type=date_type, required=True)
-        parser.add_argument('end_date', type=date_type, required=True)
+        parser.add_argument('end_date', type=date_type)
         
         args = parser.parse_args()
 
