@@ -135,10 +135,10 @@ class test_fields(unittest.TestCase):
                     'speaker': u'By the Event 1 speaker',
                     'title': u'Event 1', 'canceled': False,
                     'hidden': False, 
-                    'start': 'Tue, 15 Apr 2014 21:20:30 -0000',
-                    'end': 'Wed, 16 Apr 2014 21:20:30 -0000',
+                    'start': '2014-04-15 21:20:30.000000',
+                    'end': '2014-04-16 21:20:30.000000',
                     'revision': 0, 
-                    'edited_at': 'Tue, 15 Apr 2014 21:20:30 -0000',
+                    'edited_at': '2014-04-15 21:20:30.000000',
                     'editor_id': 1,
                     'editor': 'http://localhost/people/1'})
         
@@ -181,7 +181,7 @@ class test_fields(unittest.TestCase):
                     'content': 'This is Post 1 content',
                     'title': u'Post 1', 'hidden': False, 
                     'revision': 0, 
-                    'edited_at': 'Tue, 15 Apr 2014 21:20:30 -0000',
+                    'edited_at': '2014-04-15 21:20:30.000000',
                     'editor_id': 1,
                     'editor': 'http://localhost/people/1'})
 

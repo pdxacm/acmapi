@@ -1,7 +1,7 @@
 import flask
 from flask.ext.restful import fields
 from flask.ext.restful.fields import \
-    Integer, String, DateTime, Boolean, Url, Raw
+    Integer, String, Boolean, Url, Raw
 
 from . import DATE_FORMAT, DATETIME_FORMAT
 
@@ -17,6 +17,13 @@ class DateField(Raw):
     def format(self, x):
         try:
             return x.strftime(DATE_FORMAT)
+        except AttributeError:
+            raise MarshallingException("Must be a valid date")
+
+class DateTimeField(Raw):
+    def format(self, x):
+        try:
+            return x.strftime(DATETIME_FORMAT)
         except AttributeError:
             raise MarshallingException("Must be a valid date")
 
@@ -52,9 +59,9 @@ event_fields = {
     'location': String,
     'editor_id': Integer,
     'editor': Url('people', absolute=True),
-    'edited_at': DateTime(attribute='edited_datetime'),
-    'start': DateTime,
-    'end': DateTime,
+    'edited_at': DateTimeField(attribute='edited_datetime'),
+    'start': DateTimeField,
+    'end': DateTimeField,
     'canceled': Boolean,
     'hidden': Boolean,
     'revision': Integer(attribute='index'),
@@ -66,7 +73,7 @@ post_fields = {
     'description': String, 
     'editor_id': Integer,
     'editor': Url('people', absolute=True),
-    'edited_at': DateTime(attribute='edited_datetime'),
+    'edited_at': DateTimeField(attribute='edited_datetime'),
     'hidden': Boolean,
     'revision': Integer(attribute='index'),
     'content': String,
