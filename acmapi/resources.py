@@ -2,7 +2,7 @@ import flask
 from flask import Flask
 from flask.ext import restful
 from flask.ext.restful import \
-    reqparse, fields, marshal_with, marshal
+    reqparse, fields, marshal_with, marshal, abort
 
 import sqlalchemy
 from sqlalchemy.exc import IntegrityError
@@ -19,9 +19,13 @@ from .fields import \
 from .types import \
     datetime_type, date_type
 from .authentication import AUTH
+from .argument import CustomArgument
 
 
 API = restful.Api()
+
+def _handle_error(error):
+    abort(400, message=str(error), exception=error.__class__.__name__)
 
 def _get_person_by_id(person_id):
     return models.Person.query.get(person_id)
@@ -62,7 +66,9 @@ class Events(restful.Resource):
         if event_id:
 
             event = _get_event_by_list(event_id)
-
+            if not event:
+                _handle_error(LookupError('event not found'))
+            
             return marshal(event, event_fields)
 
         else:
@@ -89,7 +95,7 @@ class Events(restful.Resource):
 
         DB.create_all()
 
-        parser = reqparse.RequestParser()
+        parser = reqparse.RequestParser(argument_class=CustomArgument)
 
         parser.add_argument('title', type=str, required=True)
         parser.add_argument('description', type=str, required=True)
@@ -132,7 +138,7 @@ class Events(restful.Resource):
 
         DB.create_all()
 
-        parser = reqparse.RequestParser()
+        parser = reqparse.RequestParser(argument_class=CustomArgument)
 
         parser.add_argument('title', type=str)
         parser.add_argument('description', type=str)
@@ -159,7 +165,7 @@ class Events(restful.Resource):
                 .one()
         except NoResultFound:
 
-            pass
+            _handle_error(LookupError('event not found'))
 
         else:
 
@@ -192,6 +198,8 @@ class Posts(restful.Resource):
         if post_id:
 
             posts = _get_post_by_list(post_id)
+            if not posts:
+                _handle_error(LookupError('post not found'))
 
             return marshal(posts, post_fields)
 
@@ -218,7 +226,7 @@ class Posts(restful.Resource):
 
         DB.create_all()
 
-        parser = reqparse.RequestParser()
+        parser = reqparse.RequestParser(argument_class=CustomArgument)
 
         parser.add_argument('title', type=str, required=True)
         parser.add_argument('description', type=str, required=True)
@@ -252,7 +260,7 @@ class Posts(restful.Resource):
 
         DB.create_all()
 
-        parser = reqparse.RequestParser()
+        parser = reqparse.RequestParser(argument_class=CustomArgument)
 
         parser.add_argument('title', type=str)
         parser.add_argument('description', type=str)
@@ -275,7 +283,7 @@ class Posts(restful.Resource):
                     .one()
 
         except NoResultFound:
-            pass
+            _handle_error(LookupError('post not found'))
 
         else:
 
@@ -315,7 +323,7 @@ class People(restful.Resource):
             if person:
                 return marshal(person, person_fields)
             else:
-                return {'message': 'person not found'}
+                _handle_error(LookupError('person not found'))
         
         else:
 
@@ -331,7 +339,7 @@ class People(restful.Resource):
         
         DB.create_all()
 
-        parser = reqparse.RequestParser()
+        parser = reqparse.RequestParser(argument_class=CustomArgument)
 
         parser.add_argument('username', type=str, required=True)
         parser.add_argument('name', type=str)
@@ -362,7 +370,7 @@ class People(restful.Resource):
 
         DB.create_all()
 
-        parser = reqparse.RequestParser()
+        parser = reqparse.RequestParser(argument_class=CustomArgument)
 
         if person_id or username:
 
@@ -384,7 +392,8 @@ class People(restful.Resource):
                 person = None
 
             if not person:
-                return {'message': 'person not found'}
+                _handle_error(LookupError('person not found'))
+        
             
             if args.username:
                 person.username = args.username
@@ -429,7 +438,7 @@ class People(restful.Resource):
                 DB.session.commit()
                 return {'message': 'delete successful'}
             else:
-                return {'message': 'delete failed, person not found'}
+                _handle_error(LookupError('person not found'))
         
         else:
 
@@ -449,7 +458,7 @@ class Memberships(restful.Resource):
             if membership:
                 return marshal(membership, membership_fields)
             else:
-                return {'message': 'membership not found'}
+                _handle_error(LookupError('membership not found'))
 
         else:
 
@@ -463,7 +472,7 @@ class Memberships(restful.Resource):
        
         DB.create_all()
 
-        parser = reqparse.RequestParser()
+        parser = reqparse.RequestParser(argument_class=CustomArgument)
 
         parser.add_argument('person_id', type=int, required=True)
         parser.add_argument('start_date', type=date_type, required=True)
@@ -473,7 +482,7 @@ class Memberships(restful.Resource):
 
         person = _get_person_by_id(args.person_id)
         if not person:
-            return {'message': 'not a valid person_id'}
+            _handle_error(LookupError('person not found'))
 
         membership = models.Membership.create(
             person = person,
@@ -485,7 +494,7 @@ class Memberships(restful.Resource):
         try:
             DB.session.commit()
         except IntegrityError:
-            return {'message': 'start_date must be less than end_date'}
+            _handle_error(ValueError('start_date must be less than end_date'))
         
         return marshal(membership, membership_fields)
 
@@ -494,7 +503,7 @@ class Memberships(restful.Resource):
        
         DB.create_all()
 
-        parser = reqparse.RequestParser()
+        parser = reqparse.RequestParser(argument_class=CustomArgument)
 
         parser.add_argument('person_id', type=int)
         parser.add_argument('start_date', type=date_type)
@@ -504,7 +513,7 @@ class Memberships(restful.Resource):
 
         membership = _get_membership_by_id(membership_id)
         if not membership:
-            return {'message': 'membership not found'}
+            _handle_error(LookupError('membership not found'))
         
         if args.person_id:
             person = _get_person_by_id(args.person_id)
@@ -521,7 +530,7 @@ class Memberships(restful.Resource):
         try:
             DB.session.commit()
         except IntegrityError:
-            return {'message': 'start_date must be less than end_date'}
+            _handle_error(ValueError('start_date must be less than end_date'))
 
         return {'message': 'membership update successful'}
     
@@ -532,7 +541,8 @@ class Memberships(restful.Resource):
 
         membership = _get_membership_by_id(membership_id)
         if not membership:
-            return {'message': 'delete failed, membership not found'}
+            _handle_error(LookupError('membership not found'))
+
 
         DB.session.delete(membership)
         DB.session.commit()
@@ -541,7 +551,7 @@ class Memberships(restful.Resource):
 
 class Officerships(restful.Resource):
 
-    parser = reqparse.RequestParser()
+    parser = reqparse.RequestParser(argument_class=CustomArgument)
     parser.add_argument('person_id', type=int)
     parser.add_argument('title', type=str)
     parser.add_argument('start_date', type=str)
@@ -558,7 +568,7 @@ class Officerships(restful.Resource):
             if officership:
                 return marshal(officership, officership_fields)
             else:
-                return {'message': 'officership not found'}
+                _handle_error(LookupError('officership not found'))
 
         else:
 
@@ -572,7 +582,7 @@ class Officerships(restful.Resource):
 
         DB.create_all()
         
-        parser = reqparse.RequestParser()
+        parser = reqparse.RequestParser(argument_class=CustomArgument)
 
         parser.add_argument('person_id', type=int, required=True)
         parser.add_argument('title', type=str, required=True)
@@ -583,7 +593,7 @@ class Officerships(restful.Resource):
 
         person = _get_person_by_id(args.person_id)
         if not person:
-            return {'message': 'not a valid person_id'}
+            _handle_error(LookupError('person not found'))
 
         officership = models.Officership.create(
             person = person,
@@ -596,7 +606,7 @@ class Officerships(restful.Resource):
         try:
             DB.session.commit()
         except IntegrityError:
-            return {'message': 'start_date must be less than end_date'}
+            _handle_error(ValueError('start_date must be less than end_date'))
 
         return marshal(officership, officership_fields)
 
@@ -605,7 +615,7 @@ class Officerships(restful.Resource):
 
         DB.create_all()
         
-        parser = reqparse.RequestParser()
+        parser = reqparse.RequestParser(argument_class=CustomArgument)
 
         parser.add_argument('person_id', type=int)
         parser.add_argument('title', type=str)
@@ -616,12 +626,12 @@ class Officerships(restful.Resource):
 
         officership = _get_officership_by_id(officership_id)
         if not officership:
-            return {'message': 'officership not found'}
+            _handle_error(LookupError('officership not found'))
         
         if args.person_id:
             person = _get_person_by_id(args.person_id)
             if not person:
-                return {'message': 'not a valid person_id'}
+                _handle_error(LookupError('person not found'))
             officership.person_id = args.person_id
 
         if args.start_date:
@@ -633,7 +643,7 @@ class Officerships(restful.Resource):
         try:
             DB.session.commit()
         except IntegrityError:
-            return {'message': 'start_date must be less than end_date'}
+            _handle_error(ValueError('start_date must be less than end_date'))
 
         return {'message': 'officership update successful'}
 
@@ -644,7 +654,7 @@ class Officerships(restful.Resource):
 
         officership = _get_officership_by_id(officership_id)
         if not officership:
-            return {'message': 'delete failed, officership not found'}
+            _handle_error(LookupError('officership not found'))
 
         DB.session.delete(officership)
         DB.session.commit()

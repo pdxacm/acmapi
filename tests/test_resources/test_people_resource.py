@@ -184,6 +184,7 @@ class test_people_resource(unittest.TestCase):
             self.assertEqual(
                 json.loads(response.data),
                 {
+                    'exception': 'LookupError',
                     'message': 'person not found',
                 })
 
@@ -198,6 +199,7 @@ class test_people_resource(unittest.TestCase):
             self.assertEqual(
                 json.loads(response.data),
                 {
+                    'exception': 'LookupError',
                     'message': 'person not found',
                 })
 
@@ -385,7 +387,8 @@ class test_people_resource(unittest.TestCase):
 
             self.assertEqual(
                 json.loads(response.data),
-                { 'message': 'delete failed, person not found' })
+                { 'exception': 'LookupError',
+                  'message': 'person not found' })
 
             response = client.get(
                     'http://localhost:5000/people/')
@@ -409,7 +412,8 @@ class test_people_resource(unittest.TestCase):
 
             self.assertEqual(
                 json.loads(response.data),
-                { 'message': 'delete failed, person not found' })
+                { 'exception': 'LookupError',
+                  'message': 'person not found' })
 
             response = client.get(
                     'http://localhost:5000/people/')
@@ -548,7 +552,8 @@ class test_people_resource(unittest.TestCase):
         
             self.assertEqual(
                 json.loads(response.data),
-                { 'message': 'person not found' })
+                { 'exception': 'LookupError',
+                  'message': 'person not found' })
 
 
     @freeze_time("2012-01-14 12:00:01")
@@ -569,5 +574,6 @@ class test_people_resource(unittest.TestCase):
         
             self.assertEqual(
                 json.loads(response.data),
-                { 'message': 'person not found' })
+                { 'exception': 'LookupError',
+                  'message': 'person not found' })
 

@@ -126,7 +126,8 @@ class test_officerships_resource(unittest.TestCase):
         
             self.assertEqual(
                 json.loads(response.data),
-                {'message': 'start_date must be less than end_date'})
+                {'exception': 'ValueError',
+                 'message': 'start_date must be less than end_date'})
 
     @freeze_time("2012-01-14 12:00:01")
     def test_delete_existing_officership(self):
@@ -186,7 +187,8 @@ class test_officerships_resource(unittest.TestCase):
         
             self.assertEqual(
                 json.loads(response.data),
-                {'message': 'delete failed, officership not found'})
+                { 'exception': 'LookupError',
+                  'message': 'officership not found'})
 
     @freeze_time("2012-01-14 12:00:01")
     def test_list_all_officerships_1(self):
@@ -310,7 +312,8 @@ class test_officerships_resource(unittest.TestCase):
 
             self.assertEqual(
                 json.loads(response.data),
-                {'message': 'start_date must be less than end_date'})
+                {'exception': 'ValueError',
+                 'message': 'start_date must be less than end_date'})
 
     @freeze_time("2012-01-14 12:00:01")
     def test_update_non_existing_officership(self):
@@ -327,4 +330,5 @@ class test_officerships_resource(unittest.TestCase):
 
             self.assertEqual(
                 json.loads(response.data),
-                {'message': 'officership not found'})
+                { 'exception': 'LookupError',
+                  'message': 'officership not found'})
