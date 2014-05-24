@@ -274,7 +274,13 @@ class test_officerships_resource(unittest.TestCase):
 
             self.assertEqual(
                 json.loads(response.data),
-                {'message': 'officership update successful'})
+                {'end_date': '2014-04-13',
+                 'id': 2,
+                 'person': 'http://localhost:5000/people/2',
+                 'person_id': 2,
+                 'title': 'foo',
+                 'start_date': '2014-04-12'})
+
 
     @freeze_time("2012-01-14 12:00:01")
     def test_update_existing_officership_invalid(self):

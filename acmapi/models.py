@@ -59,9 +59,9 @@ class Post(DB.Model):
     title = DB.Column(DB.Unicode)
     description = DB.Column(DB.UnicodeText)
     content = DB.Column(DB.UnicodeText)
-    editor_id = DB.Column(DB.Integer, DB.ForeignKey('people.id'), nullable=None)
-    edited_datetime = DB.Column(DB.DateTime, nullable=None)
-    hidden = DB.Column(DB.Boolean, nullable=None)
+    editor_id = DB.Column(DB.Integer, DB.ForeignKey('people.id'), nullable=False)
+    edited_datetime = DB.Column(DB.DateTime, nullable=False)
+    hidden = DB.Column(DB.Boolean, nullable=False)
     list = DB.Column(DB.Integer, nullable=False, index=True)
     index = DB.Column(DB.Integer, nullable=False, index=True)
     

@@ -478,7 +478,12 @@ class test_people_resource(unittest.TestCase):
         
             self.assertEqual(
                 json.loads(response.data),
-                { 'message': 'person update successful' })
+                {'email': 'jbob@example.com',
+                 'id': 2,
+                 'name': 'Jim Billy',
+                 'username': 'bob',
+                 'website': 'http://jbob.example.com'})
+
 
             response = client.get(
                 'http://localhost:5000/people/2')
@@ -520,7 +525,11 @@ class test_people_resource(unittest.TestCase):
         
             self.assertEqual(
                 json.loads(response.data),
-                { 'message': 'person update successful' })
+                {'email': 'jbob@example.com',
+                 'id': 2,
+                 'name': 'Jim Billy',
+                 'username': 'bob',
+                 'website': 'http://jbob.example.com'})
 
             response = client.get(
                 'http://localhost:5000/people/bob')

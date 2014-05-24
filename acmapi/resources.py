@@ -97,13 +97,13 @@ class Events(restful.Resource):
 
         parser = reqparse.RequestParser(argument_class=CustomArgument)
 
-        parser.add_argument('title', type=str, required=True)
-        parser.add_argument('description', type=str, required=True)
-        parser.add_argument('location', type=str, required=True)
+        parser.add_argument('title', type=str)
+        parser.add_argument('description', type=str)
+        parser.add_argument('location', type=str)
         parser.add_argument('hidden', type=bool, default=False)
         parser.add_argument('canceled', type=bool, default=False)
-        parser.add_argument('speaker', type=str, required=True)
-        parser.add_argument('location', type=str, required=True)
+        parser.add_argument('speaker', type=str)
+        parser.add_argument('location', type=str)
         parser.add_argument('start', type=datetime_type, required=True)
         parser.add_argument('end', type=datetime_type, required=True)
 
@@ -228,9 +228,9 @@ class Posts(restful.Resource):
 
         parser = reqparse.RequestParser(argument_class=CustomArgument)
 
-        parser.add_argument('title', type=str, required=True)
-        parser.add_argument('description', type=str, required=True)
-        parser.add_argument('content', type=str, required=True)
+        parser.add_argument('title', type=str)
+        parser.add_argument('description', type=str)
+        parser.add_argument('content', type=str)
         parser.add_argument('hidden', type=bool, default=False)
 
         args = parser.parse_args()
@@ -409,9 +409,9 @@ class People(restful.Resource):
             try:
                 DB.session.commit()
             except IntegrityError:
-                return { 'message': 'username already exists' }
+                return _handle_error(ValueError('username already exists'))
 
-            return { 'message': 'person update successful' }
+            return marshal(person, person_fields)
 
         else:
 
@@ -518,7 +518,7 @@ class Memberships(restful.Resource):
         if args.person_id:
             person = _get_person_by_id(args.person_id)
             if not person:
-                return {'message': 'not a valid person_id'}
+                return _handle_error(ValueError('not a valid person_id'))
             membership.person_id = args.person_id
 
         if args.start_date:
@@ -532,7 +532,7 @@ class Memberships(restful.Resource):
         except IntegrityError:
             _handle_error(ValueError('start_date must be less than end_date'))
 
-        return {'message': 'membership update successful'}
+        return marshal(membership, membership_fields)
     
     @AUTH.login_required
     def delete(self, membership_id):
@@ -645,7 +645,7 @@ class Officerships(restful.Resource):
         except IntegrityError:
             _handle_error(ValueError('start_date must be less than end_date'))
 
-        return {'message': 'officership update successful'}
+        return marshal(officership, officership_fields)
 
     @AUTH.login_required
     def delete(self, officership_id):

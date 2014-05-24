@@ -252,7 +252,11 @@ class test_memberships_resource(unittest.TestCase):
 
             self.assertEqual(
                 json.loads(response.data),
-                {'message': 'membership update successful'})
+                {'end_date': '2014-04-13',
+                 'id': 1,
+                 'person': 'http://localhost:5000/people/2',
+                 'person_id': 2,
+                 'start_date': '2014-04-12'})
 
     @freeze_time("2012-01-14 12:00:01")
     def test_update_existing_membership_invalid(self):
