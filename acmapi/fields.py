@@ -103,3 +103,12 @@ officership_fields = {
     'person_id': Integer,
     'person': Url('people', absolute=True),
 }
+
+database_fields = {
+    'dilect': String,
+    'host': String,
+    'port': Integer,
+    'database': String,
+    'username': String,
+    'password': String,
+}

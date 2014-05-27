@@ -1,5 +1,5 @@
 import flask
-from flask import Flask
+from flask import Flask, current_app
 from flask.ext import restful
 from flask.ext.restful import \
     reqparse, fields, marshal_with, marshal, abort
@@ -10,12 +10,17 @@ from sqlalchemy.orm.exc import NoResultFound
 
 import datetime
 
+try:
+    from urlparse import urlparse
+except ImportError:
+    from urllib.parse import urlparse 
+
 from . import models
 from .models import DB
 from .fields import \
     DateField, MarshallingException, \
     root_fields, event_fields, post_fields, person_fields, \
-    membership_fields, officership_fields
+    membership_fields, officership_fields, database_fields
 from .types import \
     datetime_type, date_type
 from .authentication import AUTH
@@ -661,6 +666,43 @@ class Officerships(restful.Resource):
 
         return {'message': 'delete successful'}
 
+class Database(restful.Resource):
+
+    @AUTH.login_required
+    def get(self):
+        parsed_url = urlparse(current_app.config['SQLALCHEMY_DATABASE_URI'])
+        
+        username, password, host, port = None, None, None, None
+
+        split_netloc = parsed_url.netloc.split('@')
+        if len(split_netloc) == 2:
+            host = split_netloc[1]
+            username_password = split_netloc[0].split(':')
+            if len(username_password) == 2:
+                username = username_password[0]
+                password = username_password[1]
+            else:
+                username = username_password[0]
+        elif len(split_netloc) == 1:
+            host = split_netloc[0]
+        
+        split_host = host.split(':')
+        if len(split_host) == 2:
+            host = split_host[0]
+            port = split_host[1]
+        elif len(split_host) == 1:
+            host = split_host[0]
+
+        database = {
+            'dilect': parsed_url.scheme,
+            'host': host,
+            'port': port,
+            'database': parsed_url.path.strip('/'),
+            'username': username,
+            'password': password}
+
+        return marshal(database, database_fields)
+
 API.add_resource(
     Root, 
     '/', 
@@ -698,3 +740,7 @@ API.add_resource(
     '/officerships/<int:officership_id>',
     endpoint='officerships')
 
+API.add_resource(
+    Database, 
+    '/database/',
+    endpoint='database')
