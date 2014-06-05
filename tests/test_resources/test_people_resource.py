@@ -31,8 +31,11 @@ HEADERS={
 
 class test_people_resource(unittest.TestCase):
 
+
     @freeze_time("2012-01-14 12:00:01")
     def setUp(self):
+
+        self.maxDiff = None
 
         self.app = acmapi.create_app(SQLALCHEMY_DATABASE_URI='sqlite://')
         self.app.testing = True
@@ -83,6 +86,9 @@ class test_people_resource(unittest.TestCase):
                     'name': 'Bob Billy',
                     'email': 'bbob@example.com',
                     'website': 'http://bbob.example.com',
+                    'gravatar_email': None,
+                    'gravatar_id': None,
+                    'avatar_url': None,
                 })
 
     @freeze_time("2012-01-14 12:00:01")
@@ -143,6 +149,9 @@ class test_people_resource(unittest.TestCase):
                     'name': 'Bob Billy',
                     'email': 'bbob@example.com',
                     'website': 'http://bbob.example.com',
+                    'gravatar_email': None,
+                    'gravatar_id': None,
+                    'avatar_url': None,
                 })
 
     @freeze_time("2012-01-14 12:00:01")
@@ -171,6 +180,9 @@ class test_people_resource(unittest.TestCase):
                     'name': 'Bob Billy',
                     'email': 'bbob@example.com',
                     'website': 'http://bbob.example.com',
+                    'gravatar_email': None,
+                    'gravatar_id': None,
+                    'avatar_url': None,
                 })
 
     @freeze_time("2012-01-14 12:00:01")
@@ -217,6 +229,9 @@ class test_people_resource(unittest.TestCase):
                     'name': None,
                     'email': None,
                     'website': None,
+                    'gravatar_email': None,
+                    'gravatar_id': None,
+                    'avatar_url': None,
                     }])
 
     @freeze_time("2012-01-14 12:00:01")
@@ -245,6 +260,9 @@ class test_people_resource(unittest.TestCase):
                     'name': None,
                     'email': None,
                     'website': None,
+                    'gravatar_email': None,
+                    'gravatar_id': None,
+                    'avatar_url': None,
                     },
                     {
                     'id': 2,
@@ -252,6 +270,9 @@ class test_people_resource(unittest.TestCase):
                     'name': 'Bob Billy',
                     'email': 'bbob@example.com',
                     'website': 'http://bbob.example.com',
+                    'gravatar_email': None,
+                    'gravatar_id': None,
+                    'avatar_url': None,
                 }])
 
     @freeze_time("2012-01-14 12:00:01")
@@ -291,6 +312,9 @@ class test_people_resource(unittest.TestCase):
                     'name': None,
                     'email': None,
                     'website': None,
+                    'gravatar_email': None,
+                    'gravatar_id': None,
+                    'avatar_url': None,
                     },
                 {
                     'id': 2,
@@ -298,6 +322,9 @@ class test_people_resource(unittest.TestCase):
                     'name': 'Bob Billy',
                     'email': 'bbob@example.com',
                     'website': 'http://bbob.example.com',
+                    'gravatar_email': None,
+                    'gravatar_id': None,
+                    'avatar_url': None,
                 },
                 {
                     'id': 3,
@@ -305,6 +332,9 @@ class test_people_resource(unittest.TestCase):
                     'name': 'Foo Bar',
                     'email': 'foobar@example.com',
                     'website': 'http://foobar.example.com',
+                    'gravatar_email': None,
+                    'gravatar_id': None,
+                    'avatar_url': None,
                 }])
 
     @freeze_time("2012-01-14 12:00:01")
@@ -340,6 +370,9 @@ class test_people_resource(unittest.TestCase):
                     'name': None,
                     'email': None,
                     'website': None,
+                    'gravatar_email': None,
+                    'gravatar_id': None,
+                    'avatar_url': None,
                     }])
 
     @freeze_time("2012-01-14 12:00:01")
@@ -375,6 +408,9 @@ class test_people_resource(unittest.TestCase):
                     'name': None,
                     'email': None,
                     'website': None,
+                    'gravatar_email': None,
+                    'gravatar_id': None,
+                    'avatar_url': None,
                     }])
 
     @freeze_time("2012-01-14 12:00:01")
@@ -400,6 +436,9 @@ class test_people_resource(unittest.TestCase):
                     'name': None,
                     'email': None,
                     'website': None,
+                    'gravatar_email': None,
+                    'gravatar_id': None,
+                    'avatar_url': None,
                     }])
 
     @freeze_time("2012-01-14 12:00:01")
@@ -425,6 +464,9 @@ class test_people_resource(unittest.TestCase):
                     'name': None,
                     'email': None,
                     'website': None,
+                    'gravatar_email': None,
+                    'gravatar_id': None,
+                    'avatar_url': None,
                     }])
 
     @freeze_time("2012-01-14 12:00:01")
@@ -449,6 +491,9 @@ class test_people_resource(unittest.TestCase):
                     'name': None,
                     'email': None,
                     'website': None,
+                    'gravatar_email': None,
+                    'gravatar_id': None,
+                    'avatar_url': None,
                     }])
 
     @freeze_time("2012-01-14 12:00:01")
@@ -482,7 +527,11 @@ class test_people_resource(unittest.TestCase):
                  'id': 2,
                  'name': 'Jim Billy',
                  'username': 'bob',
-                 'website': 'http://jbob.example.com'})
+                 'website': 'http://jbob.example.com',
+                 'gravatar_email': None,
+                 'gravatar_id': None,
+                 'avatar_url': None,
+                 })
 
 
             response = client.get(
@@ -496,6 +545,9 @@ class test_people_resource(unittest.TestCase):
                     'name': 'Jim Billy',
                     'email': 'jbob@example.com',
                     'website': 'http://jbob.example.com',
+                    'gravatar_email': None,
+                    'gravatar_id': None,
+                    'avatar_url': None,
                 })
 
     @freeze_time("2012-01-14 12:00:01")
@@ -529,7 +581,12 @@ class test_people_resource(unittest.TestCase):
                  'id': 2,
                  'name': 'Jim Billy',
                  'username': 'bob',
-                 'website': 'http://jbob.example.com'})
+                 'website': 'http://jbob.example.com',
+                 'gravatar_email': None,
+                 'gravatar_id': None,
+                 'avatar_url': None,
+                 })
+
 
             response = client.get(
                 'http://localhost:5000/people/bob')
@@ -542,6 +599,9 @@ class test_people_resource(unittest.TestCase):
                     'name': 'Jim Billy',
                     'email': 'jbob@example.com',
                     'website': 'http://jbob.example.com',
+                    'gravatar_email': None,
+                    'gravatar_id': None,
+                    'avatar_url': None,
                 })
 
     @freeze_time("2012-01-14 12:00:01")

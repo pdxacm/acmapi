@@ -2,6 +2,7 @@ from flask.ext.sqlalchemy import SQLAlchemy
 from passlib.apps import custom_app_context as pwd_context
 
 import datetime
+import hashlib
 
 DB = SQLAlchemy()
 
@@ -98,6 +99,9 @@ class Person(DB.Model):
     email = DB.Column(DB.Unicode)
     website = DB.Column(DB.Unicode)
     password_hash = DB.Column(DB.String)
+    gravatar_email = DB.Column(DB.Unicode)
+    gravatar_id = DB.Column(DB.Unicode)
+    avatar_url = DB.Column(DB.Unicode)
 
     memberships = DB.relationship(
         'Membership', 
@@ -124,7 +128,8 @@ class Person(DB.Model):
     )
     
     @classmethod
-    def create(cls, name, username, email, website, password):
+    def create(cls, name, username, email, website, password,
+            gravatar_email=None):
 
         x = cls()
         x.name = name
@@ -132,6 +137,8 @@ class Person(DB.Model):
         x.email = email
         x.website = website
         x.password = x.hash_password(password)
+        if gravatar_email:
+            x.set_gravatar_email(gravatar_email)
         return x
 
     def __repr__(self):
@@ -150,6 +157,12 @@ class Person(DB.Model):
                 (not officership.end_date or today <= officership.end_date):
                     return True
         return False
+
+    def set_gravatar_email(self, new_email):
+        self.gravatar_email = new_email
+        self.gravatar_id = hashlib.md5(self.gravatar_email).hexdigest()
+        self.gravatar_url = 'http://www.gravatar.com/avatar/{}'.format(
+                self.gravatar_id)
 
 class Officership(DB.Model):
     

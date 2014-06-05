@@ -86,7 +86,9 @@ class test_fields(unittest.TestCase):
                     dict(marshal(person, person_fields)),
                     {"id": 1, "username": u"johnd", "email":
                         u"johnd@example.com", "website":
-                        u"http://johnd.com", 'name': u'John Doe'})
+                        u"http://johnd.com", 'name': u'John Doe',
+                        "gravatar_email": None, "gravatar_id": None,
+                        "avatar_url": None})
 
     def test_event_fields(self):
         
