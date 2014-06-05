@@ -13,7 +13,7 @@ reqs = [str(ir.req) for ir in install_reqs]
 if __name__ == "__main__":
     setuptools.setup(
         name="acmapi",
-        version="0.1.0",
+        version="0.2.1",
         description="",
         author="Cameron Brandon White",
         author_email="cameronbwhite90@gmail.com",

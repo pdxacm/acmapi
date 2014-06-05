@@ -85,6 +85,9 @@ person_fields = {
     'name': String,
     'email': String,
     'website': String,
+    'gravatar_email': String,
+    'gravatar_id': String,
+    'avatar_url': String,
 }
 
 membership_fields = {
