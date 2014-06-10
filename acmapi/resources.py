@@ -47,15 +47,15 @@ def _get_membership_by_id(membership_id):
 def _get_officership_by_id(officership_id):
     return models.Officership.query.get(officership_id)
 
-def _get_post_by_list(list_id):
-    return models.Post.query.filter_by(
+def _get_post_by_list(list_id, page, pagesize):
+    return list(models.Post.query.filter_by(
             list=list_id).order_by(
-                    models.Post.index).all()
+                    models.Post.index).limit(pagesize).offset(page-1))
 
-def _get_event_by_list(list_id):
-    return models.Event.query.filter_by(
+def _get_event_by_list(list_id, page, pagesize):
+    return list(models.Event.query.filter_by(
             list=list_id).order_by(
-                    models.Event.index).all()
+                    models.Event.index).limit(pagesize).offset(page-1))
 
 class Root(restful.Resource):
     @marshal_with(root_fields)
@@ -66,11 +66,18 @@ class Events(restful.Resource):
 
     def get(self, event_id=None):
 
+        parser = reqparse.RequestParser(argument_class=CustomArgument)
+
+        parser.add_argument('page', type=int, default=1)
+        parser.add_argument('pagesize', type=int)
+
+        args = parser.parse_args()
+
         DB.create_all()
 
         if event_id:
 
-            event = _get_event_by_list(event_id)
+            event = _get_event_by_list(event_id, args.page, args.pagesize)
             if not event:
                 _handle_error(LookupError('event not found'))
             
@@ -87,12 +94,12 @@ class Events(restful.Resource):
             events = DB.session.query(models.Event)\
                     .join(sub, models.Event.index==sub.c.max_index)\
                     .filter(models.Event.list==sub.c.list)\
-                    .all()
+                    .limit(args.pagesize).offset(args.page-1)
             
             return list(map(
                 lambda event: 
                     marshal(event, event_fields), 
-                        events))
+                        list(events)))
 
     @AUTH.login_required
     def post(self):
@@ -111,6 +118,8 @@ class Events(restful.Resource):
         parser.add_argument('location', type=str)
         parser.add_argument('start', type=datetime_type, required=True)
         parser.add_argument('end', type=datetime_type, required=True)
+        parser.add_argument('page', type=int, default=1)
+        parser.add_argument('pagesize', type=int)
 
         args = parser.parse_args()
         
@@ -198,11 +207,18 @@ class Posts(restful.Resource):
 
     def get(self, post_id=None):
 
+        parser = reqparse.RequestParser(argument_class=CustomArgument)
+
+        parser.add_argument('page', type=int, default=1)
+        parser.add_argument('pagesize', type=int)
+
+        args = parser.parse_args()
+
         DB.create_all()
 
         if post_id:
 
-            posts = _get_post_by_list(post_id)
+            posts = _get_post_by_list(post_id, args.page, args.pagesize)
             if not posts:
                 _handle_error(LookupError('post not found'))
 
@@ -219,12 +235,12 @@ class Posts(restful.Resource):
             posts = DB.session.query(models.Post)\
                 .join(sub, models.Post.index==sub.c.max_index)\
                 .filter(models.Post.list==sub.c.list)\
-                .all()
+                .limit(args.pagesize).offset(args.page-1)
 
             return list(map(
                 lambda post: 
                     marshal(post, post_fields), 
-                    posts))
+                    list(posts)))
         
     @AUTH.login_required
     def post(self):
@@ -237,6 +253,8 @@ class Posts(restful.Resource):
         parser.add_argument('description', type=str)
         parser.add_argument('content', type=str)
         parser.add_argument('hidden', type=bool, default=False)
+        parser.add_argument('page', type=int, default=1)
+        parser.add_argument('pagesize', type=int)
 
         args = parser.parse_args()
         
@@ -312,6 +330,13 @@ class People(restful.Resource):
     
     def get(self, person_id=None, username=None):
         
+        parser = reqparse.RequestParser(argument_class=CustomArgument)
+
+        parser.add_argument('page', type=int, default=1)
+        parser.add_argument('pagesize', type=int)
+
+        args = parser.parse_args()
+
         DB.create_all()
         
         if person_id or username:
@@ -332,12 +357,12 @@ class People(restful.Resource):
         
         else:
 
-            people = models.Person.query.all()
+            people = models.Person.query.limit(args.pagesize).offset(args.page-1)
 
             return list(map(
                 lambda person: 
                     marshal(person, person_fields), 
-                people))
+                list(people)))
 
     @AUTH.login_required
     def post(self):
@@ -458,7 +483,14 @@ class People(restful.Resource):
 class Memberships(restful.Resource):
 
     def get(self, membership_id=None):
-        
+
+        parser = reqparse.RequestParser(argument_class=CustomArgument)
+
+        parser.add_argument('page', type=int, default=1)
+        parser.add_argument('pagesize', type=int)
+
+        args = parser.parse_args()
+
         DB.create_all()
 
         if membership_id:
@@ -475,7 +507,7 @@ class Memberships(restful.Resource):
             return list(map(
                 lambda membership: 
                     marshal(membership, membership_fields), 
-                models.Membership.query.all()))
+                list(models.Membership.query.limit(args.pagesize).offset(args.page-1))))
 
     @AUTH.login_required
     def post(self):
@@ -569,6 +601,13 @@ class Officerships(restful.Resource):
 
     def get(self, officership_id=None):
 
+        parser = reqparse.RequestParser(argument_class=CustomArgument)
+
+        parser.add_argument('page', type=int, default=1)
+        parser.add_argument('pagesize', type=int)
+        
+        args = parser.parse_args()
+
         DB.create_all()
         
         if officership_id:
@@ -585,7 +624,7 @@ class Officerships(restful.Resource):
             return list(map(
                 lambda officership: 
                     marshal(officership, officership_fields), 
-                models.Officership.query.all()))
+                list(models.Officership.query.limit(args.pagesize).offset(args.page-1))))
 
     @AUTH.login_required
     def post(self):
@@ -675,6 +714,14 @@ class Database(restful.Resource):
 
     @AUTH.login_required
     def get(self):
+
+        parser = reqparse.RequestParser(argument_class=CustomArgument)
+
+        parser.add_argument('page', type=int, default=1)
+        parser.add_argument('pagesize', type=int)
+
+        args = parser.parse_args()
+
         parsed_url = urlparse(current_app.config['SQLALCHEMY_DATABASE_URI'])
         
         username, password, host, port = None, None, None, None
