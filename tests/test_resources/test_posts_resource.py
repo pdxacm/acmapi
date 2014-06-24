@@ -9,9 +9,10 @@ import datetime
 from flask import Flask
 
 from flask.ext.restful import fields, marshal
+from flask.ext.restful.fields import MarshallingException
 
 from acmapi.fields import \
-    DateField, MarshallingException, \
+    Date, \
     root_fields, event_fields, post_fields, person_fields, \
     membership_fields, officership_fields
 

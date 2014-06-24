@@ -1,8 +1,11 @@
 import flask
 from flask import Flask, current_app
 from flask.ext import restful
-from flask.ext.restful import \
-    reqparse, fields, marshal_with, marshal, abort
+from flask.ext.restful import reqparse
+from flask.ext.restful import fields
+from flask.ext.restful import marshal_with
+from flask.ext.restful import marshal
+from flask.ext.restful import abort
 
 import sqlalchemy
 from sqlalchemy.exc import IntegrityError
@@ -17,12 +20,16 @@ except ImportError:
 
 from . import models
 from .models import DB
-from .fields import \
-    DateField, MarshallingException, \
-    root_fields, event_fields, post_fields, person_fields, \
-    membership_fields, officership_fields, database_fields
-from .types import \
-    datetime_type, date_type
+from .fields import Date
+from .fields import root_fields
+from .fields import event_fields
+from .fields import post_fields
+from .fields import person_fields
+from .fields import membership_fields
+from .fields import officership_fields
+from .fields import database_fields
+from .types import datetime_type
+from .types import date_type
 from .authentication import AUTH
 from .argument import CustomArgument
 
