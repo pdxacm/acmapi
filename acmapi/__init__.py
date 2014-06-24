@@ -9,8 +9,12 @@ DATE_FORMAT = '%Y-%m-%d'
 __version__ = '0.1.0'
 
 from .models import DB
-from .resources import \
-    API, Root, Events, People, Memberships, Officerships
+from .resources import API
+from .resources import Root
+from .resources import Events
+from .resources import People
+from .resources import Memberships
+from .resources import Officerships
 from .authentication import AUTH
 
 def create_app(config_files=None, envvars_files=None, *envvars, **other):

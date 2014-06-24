@@ -1,9 +1,9 @@
 import unittest
 import datetime
 
-from acmapi.types import \
-    date_type, datetime_type, \
-    ValidationError
+from acmapi.types import date_type
+from acmapi.types import datetime_type
+from acmapi.types import ValidationError
 
 class test_date_type(unittest.TestCase):
     

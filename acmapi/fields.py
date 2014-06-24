@@ -1,47 +1,18 @@
-import flask
-from flask.ext.restful import fields
-from flask.ext.restful.fields import \
-    Integer, String, Boolean, Url, Raw
+from flask.ext.restful.fields import Integer
+from flask.ext.restful.fields import String
+from flask.ext.restful.fields import Boolean
+from flask.ext.restful.fields import Url
+from flask.ext.restful.fields import Raw
+from flask.ext.restful.fields import List
+from flask.ext.restful.fields import Nested
 
-from . import DATE_FORMAT, DATETIME_FORMAT
+from .field_types import UrlUsage
+from .field_types import UrlWithParams
+from .field_types import DateTime
+from .field_types import Date
 
-try:
-    from urlparse import urlparse, urlunparse
-except ImportError:
-    from urllib.parse import urlparse, urlunparse
-
-class MarshallingException(Exception):
-    pass
-
-class DateField(Raw):
-    def format(self, x):
-        try:
-            return x.strftime(DATE_FORMAT)
-        except AttributeError:
-            raise MarshallingException("Must be a valid date")
-
-class DateTimeField(Raw):
-    def format(self, x):
-        try:
-            return x.strftime(DATETIME_FORMAT)
-        except AttributeError:
-            raise MarshallingException("Must be a valid date")
-
-class UrlUsage(Raw):
-    
-    def __init__(self, endpoint, absolute=False, scheme=None):
-        self.endpoint = endpoint
-        self.absolute = absolute
-        self.scheme = scheme
-
-    def output(self, obj, key):
-        urls = []
-        for rule in flask.current_app.url_map.iter_rules():
-            if rule.endpoint == self.endpoint:
-                o = urlparse(flask.url_for(self.endpoint, _external = self.absolute))
-                scheme = self.scheme if self.scheme is not None else o.scheme
-                urls.append(urlunparse((scheme, o.netloc, rule.rule, "", "", "")))
-        return urls
+from . import DATE_FORMAT
+from . import DATETIME_FORMAT
 
 root_fields = {
     'events_url': UrlUsage('events', absolute=True),
@@ -59,9 +30,9 @@ event_fields = {
     'location': String,
     'editor_id': Integer,
     'editor': Url('people', absolute=True),
-    'edited_at': DateTimeField(attribute='edited_datetime'),
-    'start': DateTimeField,
-    'end': DateTimeField,
+    'edited_at': DateTime(DATETIME_FORMAT, attribute='edited_datetime'),
+    'start': DateTime(DATETIME_FORMAT),
+    'end': DateTime(DATETIME_FORMAT),
     'canceled': Boolean,
     'hidden': Boolean,
     'revision': Integer(attribute='index'),
@@ -73,7 +44,7 @@ post_fields = {
     'description': String, 
     'editor_id': Integer,
     'editor': Url('people', absolute=True),
-    'edited_at': DateTimeField(attribute='edited_datetime'),
+    'edited_at': DateTime(DATETIME_FORMAT, attribute='edited_datetime'),
     'hidden': Boolean,
     'revision': Integer(attribute='index'),
     'content': String,
@@ -92,8 +63,8 @@ person_fields = {
 
 membership_fields = {
     'id': Integer,
-    'start_date': DateField,
-    'end_date': DateField,
+    'start_date': Date(DATE_FORMAT),
+    'end_date': Date(DATE_FORMAT),
     'person_id': Integer,
     'person': Url('people', absolute=True),
 }
@@ -101,11 +72,12 @@ membership_fields = {
 officership_fields = {
     'id': Integer,
     'title': String,
-    'start_date': DateField,
-    'end_date': DateField,
+    'start_date': Date(DATE_FORMAT),
+    'end_date': Date(DATE_FORMAT),
     'person_id': Integer,
     'person': Url('people', absolute=True),
 }
+
 
 database_fields = {
     'dilect': String,
