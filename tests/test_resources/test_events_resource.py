@@ -8,19 +8,27 @@ import datetime
 
 from flask import Flask
 
-from flask.ext.restful import fields, marshal
+from flask.ext.restful import fields
+from flask.ext.restful import marshal
 from flask.ext.restful.fields import MarshallingException
 
-from acmapi.fields import \
-    Date, \
-    root_fields, event_fields, post_fields, person_fields, \
-    membership_fields, officership_fields
+from acmapi.fields import Date
+from acmapi.fields import root_fields
+from acmapi.fields import event_fields
+from acmapi.fields import post_fields
+from acmapi.fields import person_fields
+from acmapi.fields import membership_fields
+from acmapi.fields import officership_fields
 
 import acmapi
 
-from acmapi import models, resources, DB
+from acmapi import models
+from acmapi import resources
+from acmapi import DB
+
 from acmapi.resources import API
-from acmapi.models import Person, Officership
+from acmapi.models import Person
+from acmapi.models import Officership
 
 
 import  base64

@@ -4,8 +4,11 @@
 
 from flask import Flask
 from acmapi import DB
-from acmapi.models import \
-    Event, Post, Person, Membership, Officership
+from acmapi.models import Event
+from acmapi.models import Post
+from acmapi.models import Person
+from acmapi.models import Membership
+from acmapi.models import Officership
 import unittest
 import os
 import datetime

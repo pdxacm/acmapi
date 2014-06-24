@@ -6,7 +6,8 @@ These function are types for reqparse arguments.
 
 import datetime
 
-from . import DATE_FORMAT, DATETIME_FORMAT
+from . import DATE_FORMAT
+from . import DATETIME_FORMAT
 
 class ValidationError(Exception):
     pass
