@@ -15,6 +15,7 @@ class test_urlbuilder_field_type(unittest.TestCase):
 
     def setUp(self):
         self.app = Flask(__name__)
+        self.api = restful.Api()
 
     def test_none(self):
 
@@ -27,12 +28,12 @@ class test_urlbuilder_field_type(unittest.TestCase):
                 return marshal({ 'resources0':{}
                     }, field)
 
-        API.add_resource(
+        self.api.add_resource(
             Resource0, 
             '/resources0/', 
             endpoint='resources0')
 
-        API.init_app(self.app)
+        self.api.init_app(self.app)
             
         with self.app.test_client() as client:
 

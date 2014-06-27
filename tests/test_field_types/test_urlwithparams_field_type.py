@@ -1,6 +1,5 @@
 import unittest
 
-
 import json
 
 import datetime
@@ -17,29 +16,30 @@ class test_urlwithparams_field_type(unittest.TestCase):
 
     def setUp(self):
         self.app = Flask(__name__)
+        self.api = restful.Api()
 
     def test_valid_list(self):
 
         field_1 = {
             'resources': UrlWithParams(
-                'resources1', params=['foo'], absolute=True),
+                'resources10', params=['foo'], absolute=True),
             'foo': Integer,
         }
 
-        class Resource1(restful.Resource):
+        class Resource10(restful.Resource):
             def get(self):
                 return marshal({'foo': 1}, field_1)
 
-        API.add_resource(
-            Resource1, 
-            '/resources1/', 
-            endpoint='resources1')
+        self.api.add_resource(
+            Resource10, 
+            '/resources10/', 
+            endpoint='resources10')
 
-        API.init_app(self.app)
+        self.api.init_app(self.app)
             
         with self.app.test_client() as client:
 
-            response = client.get('http://localhost:5000/resources1/')
+            response = client.get('http://localhost:5000/resources10/')
         
             self.assertEqual(
                     response.status,
@@ -48,7 +48,7 @@ class test_urlwithparams_field_type(unittest.TestCase):
             self.assertEqual(
                json.loads(response.data),
                {
-                   'resources': 'http://localhost:5000/resources1/?foo=1',
+                   'resources': 'http://localhost:5000/resources10/?foo=1',
                    'foo': 1,
                })
 
@@ -56,24 +56,24 @@ class test_urlwithparams_field_type(unittest.TestCase):
 
         field_2 = {
             'resources': UrlWithParams(
-                'resources2', params={'foo': 'bar'}, absolute=True),
+                'resources20', params={'foo': 'bar'}, absolute=True),
             'bar': Integer,
         }
 
-        class Resource2(restful.Resource):
+        class Resource20(restful.Resource):
             def get(self):
                 return marshal({'bar': 2}, field_2)
 
         API.add_resource(
-            Resource2, 
-            '/resources2/', 
-            endpoint='resources2')
+            Resource20, 
+            '/resources20/', 
+            endpoint='resources20')
 
         API.init_app(self.app)
             
         with self.app.test_client() as client:
 
-            response = client.get('http://localhost:5000/resources2/')
+            response = client.get('http://localhost:5000/resources20/')
         
             self.assertEqual(
                     response.status,
@@ -82,7 +82,7 @@ class test_urlwithparams_field_type(unittest.TestCase):
             self.assertEqual(
                json.loads(response.data),
                {
-                   'resources': 'http://localhost:5000/resources2/?foo=2',
+                   'resources': 'http://localhost:5000/resources20/?foo=2',
                    'bar': 2,
                })
 
@@ -90,23 +90,23 @@ class test_urlwithparams_field_type(unittest.TestCase):
 
         field_3 = {
             'resources': UrlWithParams(
-                'resources3', absolute=True),
+                'resources30', absolute=True),
         }
 
-        class Resource3(restful.Resource):
+        class Resource30(restful.Resource):
             def get(self):
                 return marshal({'bar': 3}, field_3)
 
         API.add_resource(
-            Resource3, 
-            '/resources3/', 
-            endpoint='resources3')
+            Resource30, 
+            '/resources30/', 
+            endpoint='resources30')
 
         API.init_app(self.app)
             
         with self.app.test_client() as client:
 
-            response = client.get('http://localhost:5000/resources3/')
+            response = client.get('http://localhost:5000/resources30/')
         
             self.assertEqual(
                     response.status,
@@ -115,5 +115,5 @@ class test_urlwithparams_field_type(unittest.TestCase):
             self.assertEqual(
                json.loads(response.data),
                {
-                   'resources': 'http://localhost:5000/resources3/',
+                   'resources': 'http://localhost:5000/resources30/',
                })

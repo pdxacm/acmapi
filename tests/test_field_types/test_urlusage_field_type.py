@@ -15,6 +15,7 @@ class test_urlusage_field_type(unittest.TestCase):
 
     def setUp(self):
         self.app = Flask(__name__)
+        self.api = restful.Api()
 
     def test_valid(self):
 
@@ -26,12 +27,12 @@ class test_urlusage_field_type(unittest.TestCase):
             def get(self):
                 return marshal({}, field)
 
-        API.add_resource(
+        self.api.add_resource(
             Resource, 
             '/resources/', 
             endpoint='resources')
 
-        API.init_app(self.app)
+        self.api.init_app(self.app)
             
         with self.app.test_client() as client:
 
