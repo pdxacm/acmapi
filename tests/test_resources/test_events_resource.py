@@ -175,37 +175,42 @@ class test_memberships_resource(unittest.TestCase):
 
             self.assertEqual(
                 json.loads(response.data),
-                [
-                    {
-                        'title': 'Title A',
-                        'description': 'Description A',
-                        'location': 'Location A',
-                        'speaker': 'Speaker A',
-                        "edited_at": '2012-01-14 12:00:01.000000',
-                        "editor": "http://localhost:5000/people/1", 
-                        "editor_id": 1, 
-                        "hidden": False, 
-                        "canceled": False, 
-                        "event_id": 1, 
-                        "revision": 1, 
-                        'start': '2014-10-10 10:10:10.000000',
-                        'end': '2014-10-10 11:10:10.000000',
-                    },{
-                        'title': 'Title B',
-                        'description': 'Description B',
-                        'location': 'Location B',
-                        'speaker': 'Speaker B',
-                        "edited_at": '2012-01-14 12:00:01.000000',
-                        "editor": "http://localhost:5000/people/1", 
-                        "editor_id": 1, 
-                        "hidden": False, 
-                        "canceled": False, 
-                        "event_id": 1, 
-                        "revision": 2, 
-                        'start': '2014-10-10 10:10:10.000000',
-                        'end': '2014-10-10 11:10:10.000000',
-                    }
-                ])
+                {
+                    'page': 1,
+                    'pagesize': 10,
+                    'nextpage': None,
+                    'events': [
+                        {
+                            'title': 'Title A',
+                            'description': 'Description A',
+                            'location': 'Location A',
+                            'speaker': 'Speaker A',
+                            "edited_at": '2012-01-14 12:00:01.000000',
+                            "editor": "http://localhost:5000/people/1", 
+                            "editor_id": 1, 
+                            "hidden": False, 
+                            "canceled": False, 
+                            "event_id": 1, 
+                            "revision": 1, 
+                            'start': '2014-10-10 10:10:10.000000',
+                            'end': '2014-10-10 11:10:10.000000',
+                        },{
+                            'title': 'Title B',
+                            'description': 'Description B',
+                            'location': 'Location B',
+                            'speaker': 'Speaker B',
+                            "edited_at": '2012-01-14 12:00:01.000000',
+                            "editor": "http://localhost:5000/people/1", 
+                            "editor_id": 1, 
+                            "hidden": False, 
+                            "canceled": False, 
+                            "event_id": 1, 
+                            "revision": 2, 
+                            'start': '2014-10-10 10:10:10.000000',
+                            'end': '2014-10-10 11:10:10.000000',
+                        }
+                    ]
+                })
 
     @freeze_time("2012-01-14 12:00:01")
     def test_multiple_events_with_multiple_revisions(self):
@@ -272,108 +277,123 @@ class test_memberships_resource(unittest.TestCase):
 
             self.assertEqual(
                 json.loads(response.data),
-                [
-                    {
-                        'title': 'Title A',
-                        'description': 'Description A',
-                        'location': 'Location A',
-                        'speaker': 'Speaker A',
-                        "edited_at": '2012-01-14 12:00:01.000000',
-                        "editor": "http://localhost:5000/people/1", 
-                        "editor_id": 1, 
-                        "hidden": False, 
-                        "canceled": False, 
-                        "event_id": 1, 
-                        "revision": 1, 
-                        'start': '2014-10-10 10:10:10.000000',
-                        'end': '2014-10-10 11:10:10.000000',
-                    },{
-                        'title': 'Title B',
-                        'description': 'Description B',
-                        'location': 'Location B',
-                        'speaker': 'Speaker B',
-                        "edited_at": '2012-01-14 12:00:01.000000',
-                        "editor": "http://localhost:5000/people/1", 
-                        "editor_id": 1, 
-                        "hidden": False, 
-                        "canceled": False, 
-                        "event_id": 1, 
-                        "revision": 2, 
-                        'start': '2014-10-10 10:10:10.000000',
-                        'end': '2014-10-10 11:10:10.000000',
-                    }
-                ])
+                {
+                    'page': 1,
+                    'pagesize': 10,
+                    'nextpage': None,
+                    'events': [
+                        {
+                            'title': 'Title A',
+                            'description': 'Description A',
+                            'location': 'Location A',
+                            'speaker': 'Speaker A',
+                            "edited_at": '2012-01-14 12:00:01.000000',
+                            "editor": "http://localhost:5000/people/1", 
+                            "editor_id": 1, 
+                            "hidden": False, 
+                            "canceled": False, 
+                            "event_id": 1, 
+                            "revision": 1, 
+                            'start': '2014-10-10 10:10:10.000000',
+                            'end': '2014-10-10 11:10:10.000000',
+                        },{
+                            'title': 'Title B',
+                            'description': 'Description B',
+                            'location': 'Location B',
+                            'speaker': 'Speaker B',
+                            "edited_at": '2012-01-14 12:00:01.000000',
+                            "editor": "http://localhost:5000/people/1", 
+                            "editor_id": 1, 
+                            "hidden": False, 
+                            "canceled": False, 
+                            "event_id": 1, 
+                            "revision": 2, 
+                            'start': '2014-10-10 10:10:10.000000',
+                            'end': '2014-10-10 11:10:10.000000',
+                        }
+                    ]
+                })
 
             response = client.get(
                 'http://localhost:5000/events/2')
 
             self.assertEqual(
                 json.loads(response.data),
-                [
-                    {
-                        'title': 'Title C',
-                        'description': 'Description C',
-                        'location': 'Location C',
-                        'speaker': 'Speaker C',
-                        "edited_at": '2012-01-14 12:00:01.000000',
-                        "editor": "http://localhost:5000/people/1", 
-                        "editor_id": 1, 
-                        "hidden": False, 
-                        "canceled": False, 
-                        "event_id": 2, 
-                        "revision": 1, 
-                        'start': '2014-10-10 10:10:10.000000',
-                        'end': '2014-10-10 11:10:10.000000',
-                    },{
-                        'title': 'Title D',
-                        'description': 'Description D',
-                        'location': 'Location D',
-                        'speaker': 'Speaker D',
-                        "edited_at": '2012-01-14 12:00:01.000000',
-                        "editor": "http://localhost:5000/people/1", 
-                        "editor_id": 1, 
-                        "hidden": False, 
-                        "canceled": False, 
-                        "event_id": 2, 
-                        "revision": 2, 
-                        'start': '2014-10-10 10:10:10.000000',
-                        'end': '2014-10-10 11:10:10.000000',
-                    }
-                ])
+                {
+                    'page': 1,
+                    'pagesize': 10,
+                    'nextpage': None,
+                    'events': [
+                        {
+                            'title': 'Title C',
+                            'description': 'Description C',
+                            'location': 'Location C',
+                            'speaker': 'Speaker C',
+                            "edited_at": '2012-01-14 12:00:01.000000',
+                            "editor": "http://localhost:5000/people/1", 
+                            "editor_id": 1, 
+                            "hidden": False, 
+                            "canceled": False, 
+                            "event_id": 2, 
+                            "revision": 1, 
+                            'start': '2014-10-10 10:10:10.000000',
+                            'end': '2014-10-10 11:10:10.000000',
+                        },{
+                            'title': 'Title D',
+                            'description': 'Description D',
+                            'location': 'Location D',
+                            'speaker': 'Speaker D',
+                            "edited_at": '2012-01-14 12:00:01.000000',
+                            "editor": "http://localhost:5000/people/1", 
+                            "editor_id": 1, 
+                            "hidden": False, 
+                            "canceled": False, 
+                            "event_id": 2, 
+                            "revision": 2, 
+                            'start': '2014-10-10 10:10:10.000000',
+                            'end': '2014-10-10 11:10:10.000000',
+                        }
+                    ]
+                })
 
             response = client.get(
                 'http://localhost:5000/events/')
 
             self.assertEqual(
                 json.loads(response.data),
-                [
-                    {
-                        'title': 'Title B',
-                        'description': 'Description B',
-                        'location': 'Location B',
-                        'speaker': 'Speaker B',
-                        "edited_at": '2012-01-14 12:00:01.000000',
-                        "editor": "http://localhost:5000/people/1", 
-                        "editor_id": 1, 
-                        "hidden": False, 
-                        "canceled": False, 
-                        "event_id": 1, 
-                        "revision": 2, 
-                        'start': '2014-10-10 10:10:10.000000',
-                        'end': '2014-10-10 11:10:10.000000',
-                    },{
-                        'title': 'Title D',
-                        'description': 'Description D',
-                        'location': 'Location D',
-                        'speaker': 'Speaker D',
-                        "edited_at": '2012-01-14 12:00:01.000000',
-                        "editor": "http://localhost:5000/people/1", 
-                        "editor_id": 1, 
-                        "hidden": False, 
-                        "canceled": False, 
-                        "event_id": 2, 
-                        "revision": 2, 
-                        'start': '2014-10-10 10:10:10.000000',
-                        'end': '2014-10-10 11:10:10.000000',
-                    }
-                ])
+                {
+                    'page': 1,
+                    'pagesize': 10,
+                    'nextpage': None,
+                    'events': [
+                        {
+                            'title': 'Title B',
+                            'description': 'Description B',
+                            'location': 'Location B',
+                            'speaker': 'Speaker B',
+                            "edited_at": '2012-01-14 12:00:01.000000',
+                            "editor": "http://localhost:5000/people/1", 
+                            "editor_id": 1, 
+                            "hidden": False, 
+                            "canceled": False, 
+                            "event_id": 1, 
+                            "revision": 2, 
+                            'start': '2014-10-10 10:10:10.000000',
+                            'end': '2014-10-10 11:10:10.000000',
+                        },{
+                            'title': 'Title D',
+                            'description': 'Description D',
+                            'location': 'Location D',
+                            'speaker': 'Speaker D',
+                            "edited_at": '2012-01-14 12:00:01.000000',
+                            "editor": "http://localhost:5000/people/1", 
+                            "editor_id": 1, 
+                            "hidden": False, 
+                            "canceled": False, 
+                            "event_id": 2, 
+                            "revision": 2, 
+                            'start': '2014-10-10 10:10:10.000000',
+                            'end': '2014-10-10 11:10:10.000000',
+                        }
+                    ]
+                })

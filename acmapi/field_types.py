@@ -114,3 +114,23 @@ class UrlWithParams(Url):
                 urlencode({ k:obj[v] for k,v in self.params.items()}), ""))
         else:
             raise TypeError("params must be of type None, list, or dict")
+
+class UrlBuilder(Raw):
+    """ Will render a url from value marshaled with """
+    
+    def __init__(self):
+        super(UrlBuilder, self).__init__(None, None)
+
+    def format(self, o):
+        url = None
+        params = None
+
+        if 'endpoint' in o and o['endpoint']:
+            url = urlparse(flask.url_for(o['endpoint'], _external = True))
+            if 'params' in o and o['params']:
+                params = urlencode(o['params'])
+            url = urlunparse(
+                (url.scheme, url.netloc, url.path, url.params, 
+                    params, url.fragment)) 
+
+        return url

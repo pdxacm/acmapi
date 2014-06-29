@@ -7,7 +7,7 @@ from flask.ext.restful.fields import List
 from flask.ext.restful.fields import Nested
 
 from .field_types import UrlUsage
-from .field_types import UrlWithParams
+from .field_types import UrlBuilder
 from .field_types import DateTime
 from .field_types import Date
 
@@ -78,6 +78,40 @@ officership_fields = {
     'person': Url('people', absolute=True),
 }
 
+people_page_fields = {
+    'people': List(Nested(person_fields)),
+    'page': Integer,
+    'pagesize': Integer,
+    'nextpage': UrlBuilder,
+}
+
+events_page_fields = {
+    'events': List(Nested(event_fields)),
+    'page': Integer,
+    'pagesize': Integer,
+    'nextpage': UrlBuilder,
+}
+
+posts_page_fields = {
+    'posts': List(Nested(post_fields)),
+    'page': Integer,
+    'pagesize': Integer,
+    'nextpage': UrlBuilder,
+}
+
+officerships_page_fields = {
+    'officerships': List(Nested(officership_fields)),
+    'page': Integer,
+    'pagesize': Integer,
+    'nextpage': UrlBuilder,
+}
+
+memberships_page_fields = {
+    'memberships': List(Nested(membership_fields)),
+    'page': Integer,
+    'pagesize': Integer,
+    'nextpage': UrlBuilder,
+}
 
 database_fields = {
     'dilect': String,

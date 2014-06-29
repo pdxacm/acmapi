@@ -1,5 +1,5 @@
 import flask
-from flask import Flask, current_app
+from flask import Flask, current_app, request
 from flask.ext import restful
 from flask.ext.restful import reqparse
 from flask.ext.restful import fields
@@ -18,54 +18,30 @@ try:
 except ImportError:
     from urllib.parse import urlparse 
 
+from . import DB
+from . import fields
 from . import models
-from .models import DB
-from .fields import Date
-from .fields import root_fields
-from .fields import event_fields
-from .fields import post_fields
-from .fields import person_fields
-from .fields import membership_fields
-from .fields import officership_fields
-from .fields import database_fields
 from .types import datetime_type
 from .types import date_type
 from .authentication import AUTH
 from .argument import CustomArgument
 
+from . import queries
 
 API = restful.Api()
 
 def _handle_error(error):
     abort(400, message=str(error), exception=error.__class__.__name__)
 
-def _get_person_by_id(person_id):
-    return models.Person.query.get(person_id)
 
-def _get_person_by_username(username):
-    try:
-        return models.Person.query.filter_by(username=username).one()
-    except NoResultFound:
-        return None 
-
-def _get_membership_by_id(membership_id):
-    return models.Membership.query.get(membership_id)
-
-def _get_officership_by_id(officership_id):
-    return models.Officership.query.get(officership_id)
-
-def _get_post_by_list(list_id, page, pagesize):
-    return list(models.Post.query.filter_by(
-            list=list_id).order_by(
-                    models.Post.index).limit(pagesize).offset(page-1))
-
-def _get_event_by_list(list_id, page, pagesize):
-    return list(models.Event.query.filter_by(
-            list=list_id).order_by(
-                    models.Event.index).limit(pagesize).offset(page-1))
+def _calculate_nextpage_number(page, pagesize, count):
+    if page * pagesize < count:
+        return page + 1
+    else:
+        return None
 
 class Root(restful.Resource):
-    @marshal_with(root_fields)
+    @marshal_with(fields.root_fields)
     def get(self):
         return {}
 
@@ -76,7 +52,7 @@ class Events(restful.Resource):
         parser = reqparse.RequestParser(argument_class=CustomArgument)
 
         parser.add_argument('page', type=int, default=1)
-        parser.add_argument('pagesize', type=int)
+        parser.add_argument('pagesize', type=int, default=10)
 
         args = parser.parse_args()
 
@@ -84,29 +60,31 @@ class Events(restful.Resource):
 
         if event_id:
 
-            event = _get_event_by_list(event_id, args.page, args.pagesize)
-            if not event:
+            events = queries.events_list(event_id, args.page, args.pagesize)
+            count = queries.events_list_count(event_id)
+
+            if not events:
                 _handle_error(LookupError('event not found'))
-            
-            return marshal(event, event_fields)
 
         else:
-        
-                
-            sub = DB.session.query(
-                models.Event.list,
-                sqlalchemy.func.max(models.Event.index).label('max_index')
-            ).group_by(models.Event.list).subquery()
 
-            events = DB.session.query(models.Event)\
-                    .join(sub, models.Event.index==sub.c.max_index)\
-                    .filter(models.Event.list==sub.c.list)\
-                    .limit(args.pagesize).offset(args.page-1)
-            
-            return list(map(
-                lambda event: 
-                    marshal(event, event_fields), 
-                        list(events)))
+            events = queries.events(args.page, args.pagesize)
+            count = queries.events_count()
+                
+        nextpage = _calculate_nextpage_number(args.page, args.pagesize, count)
+
+        return marshal({
+                'events': events,
+                'page': args.page,
+                'pagesize': args.pagesize,
+                'nextpage': {
+                    'endpoint': 'events' if nextpage else None,
+                    'params': {
+                        'page': nextpage,
+                        'pagesize': args.pagesize,
+                    },
+                },
+            }, fields.events_page_fields)
 
     @AUTH.login_required
     def post(self):
@@ -151,7 +129,7 @@ class Events(restful.Resource):
         DB.session.add(event)
         DB.session.commit()
 
-        return marshal(event, event_fields) 
+        return marshal(event, fields.event_fields) 
 
     @AUTH.login_required
     def put(self, event_id):
@@ -207,7 +185,7 @@ class Events(restful.Resource):
             
             DB.session.commit()
 
-            return marshal(event, event_fields)
+            return marshal(event, fields.event_fields)
 
 
 class Posts(restful.Resource):
@@ -217,7 +195,7 @@ class Posts(restful.Resource):
         parser = reqparse.RequestParser(argument_class=CustomArgument)
 
         parser.add_argument('page', type=int, default=1)
-        parser.add_argument('pagesize', type=int)
+        parser.add_argument('pagesize', type=int, default=10)
 
         args = parser.parse_args()
 
@@ -225,29 +203,31 @@ class Posts(restful.Resource):
 
         if post_id:
 
-            posts = _get_post_by_list(post_id, args.page, args.pagesize)
+            posts = queries.posts_list(post_id, args.page, args.pagesize)
+            count = queries.posts_list_count(post_id)
+
             if not posts:
                 _handle_error(LookupError('post not found'))
 
-            return marshal(posts, post_fields)
-
         else:
 
-            sub = DB.session.query(
-                models.Post.list,
-                sqlalchemy.func.max(models.Post.index).label('max_index')
-            ).group_by(models.Post.list).subquery()
+            posts = queries.posts(args.page, args.pagesize)
+            count = queries.posts_count()
+                
+        nextpage = _calculate_nextpage_number(args.page, args.pagesize, count)
 
-        
-            posts = DB.session.query(models.Post)\
-                .join(sub, models.Post.index==sub.c.max_index)\
-                .filter(models.Post.list==sub.c.list)\
-                .limit(args.pagesize).offset(args.page-1)
-
-            return list(map(
-                lambda post: 
-                    marshal(post, post_fields), 
-                    list(posts)))
+        return marshal({
+                'posts': posts,
+                'page': args.page,
+                'pagesize': args.pagesize,
+                'nextpage': {
+                    'endpoint': 'posts' if nextpage else None,
+                    'params': {
+                        'page': nextpage,
+                        'pagesize': args.pagesize,
+                    },
+                },
+            }, fields.posts_page_fields)
         
     @AUTH.login_required
     def post(self):
@@ -282,7 +262,7 @@ class Posts(restful.Resource):
         DB.session.add(post)
         DB.session.commit()
 
-        return marshal(post, post_fields) 
+        return marshal(post, fields.post_fields) 
 
     @AUTH.login_required
     def put(self, post_id):
@@ -330,7 +310,7 @@ class Posts(restful.Resource):
             
             DB.session.commit()
 
-            return marshal(post, post_fields)
+            return marshal(post, fields.post_fields)
 
 
 class People(restful.Resource):
@@ -338,9 +318,9 @@ class People(restful.Resource):
     def get(self, person_id=None, username=None):
         
         parser = reqparse.RequestParser(argument_class=CustomArgument)
-
-        parser.add_argument('page', type=int, default=1)
-        parser.add_argument('pagesize', type=int)
+        
+        parser.add_argument('page', type=int, default=1, location='args')
+        parser.add_argument('pagesize', type=int, default=10, location='args')
 
         args = parser.parse_args()
 
@@ -349,27 +329,32 @@ class People(restful.Resource):
         if person_id or username:
             
             if person_id:
-                person = _get_person_by_id(person_id)
-
-            elif username:
-                person = _get_person_by_username(username) 
-
+                person = queries.person_id(person_id)
             else:
-                person = None
-            
+                person = queries.person_username(username)
+
             if person:
-                return marshal(person, person_fields)
+                return marshal(person, fields.person_fields)
             else:
                 _handle_error(LookupError('person not found'))
         
         else:
+             
+            nextpage = _calculate_nextpage_number(
+                    args.page, args.pagesize, queries.people_count())
 
-            people = models.Person.query.limit(args.pagesize).offset(args.page-1)
-
-            return list(map(
-                lambda person: 
-                    marshal(person, person_fields), 
-                list(people)))
+            return marshal({
+                    'people': queries.people(args.page, args.pagesize),
+                    'page': args.page,
+                    'pagesize': args.pagesize,
+                    'nextpage': {
+                        'endpoint': 'people' if nextpage else None,
+                        'params': {
+                            'page': nextpage,
+                            'pagesize': args.pagesize,
+                        },
+                    },
+                }, fields.people_page_fields)
 
     @AUTH.login_required
     def post(self):
@@ -402,7 +387,7 @@ class People(restful.Resource):
         except IntegrityError:
             return { 'message': 'username already exists' }
 
-        return marshal(person, person_fields)
+        return marshal(person, fields.person_fields)
 
     @AUTH.login_required
     def put(self, person_id=None, username=None):
@@ -422,12 +407,11 @@ class People(restful.Resource):
 
             args = parser.parse_args()
 
-            if person_id:
-                person = _get_person_by_id(person_id)
-
-            elif username:
-                person = _get_person_by_username(username) 
-
+            if person_id or username:
+                if person_id:
+                    person = queries.person_id(person_id)
+                else:
+                    person = queries.person_username(username)
             else:
                 person = None
 
@@ -453,7 +437,7 @@ class People(restful.Resource):
             except IntegrityError:
                 return _handle_error(ValueError('username already exists'))
 
-            return marshal(person, person_fields)
+            return marshal(person, fields.person_fields)
 
         else:
 
@@ -465,27 +449,19 @@ class People(restful.Resource):
         DB.create_all()
 
         if person_id or username:
-            
             if person_id:
-                person = _get_person_by_id(person_id)
-
-            elif username:
-                person = _get_person_by_username(username) 
-
+                person = queries.person_id(person_id)
             else:
-                person = None
-            
-            if person:
-                DB.session.delete(person)
-                DB.session.commit()
-                return {'message': 'delete successful'}
-            else:
-                _handle_error(LookupError('person not found'))
-        
+                person = queries.person_username(username)
         else:
-
-            # XXX This should never happen
-            return {'message': 'delete failed, nothing to delete'}
+            person = None
+            
+        if person:
+            DB.session.delete(person)
+            DB.session.commit()
+            return {'message': 'delete successful'}
+        else:
+            _handle_error(LookupError('person not found'))
 
 class Memberships(restful.Resource):
 
@@ -494,7 +470,7 @@ class Memberships(restful.Resource):
         parser = reqparse.RequestParser(argument_class=CustomArgument)
 
         parser.add_argument('page', type=int, default=1)
-        parser.add_argument('pagesize', type=int)
+        parser.add_argument('pagesize', type=int, default=10)
 
         args = parser.parse_args()
 
@@ -502,19 +478,31 @@ class Memberships(restful.Resource):
 
         if membership_id:
 
-            membership = _get_membership_by_id(membership_id)
+            membership = queries.membership(membership_id)
 
             if membership:
-                return marshal(membership, membership_fields)
+                return marshal(membership, fields.membership_fields)
             else:
                 _handle_error(LookupError('membership not found'))
 
         else:
 
-            return list(map(
-                lambda membership: 
-                    marshal(membership, membership_fields), 
-                list(models.Membership.query.limit(args.pagesize).offset(args.page-1))))
+            nextpage = _calculate_nextpage_number(
+                    args.page, args.pagesize, 
+                    queries.memberships_count())
+
+            return marshal({
+                    'memberships': queries.memberships(args.page, args.pagesize),
+                    'page': args.page,
+                    'pagesize': args.pagesize,
+                    'nextpage': {
+                        'endpoint': 'memberships' if nextpage else None,
+                        'params': {
+                            'page': nextpage,
+                            'pagesize': args.pagesize,
+                        },
+                    },
+                }, fields.memberships_page_fields)
 
     @AUTH.login_required
     def post(self):
@@ -529,7 +517,7 @@ class Memberships(restful.Resource):
         
         args = parser.parse_args()
 
-        person = _get_person_by_id(args.person_id)
+        person = queries.person_id(args.person_id)
         if not person:
             _handle_error(LookupError('person not found'))
 
@@ -545,7 +533,7 @@ class Memberships(restful.Resource):
         except IntegrityError:
             _handle_error(ValueError('start_date must be less than end_date'))
         
-        return marshal(membership, membership_fields)
+        return marshal(membership, fields.membership_fields)
 
     @AUTH.login_required
     def put(self, membership_id):
@@ -560,12 +548,12 @@ class Memberships(restful.Resource):
 
         args = parser.parse_args()
 
-        membership = _get_membership_by_id(membership_id)
+        membership = queries.membership(membership_id)
         if not membership:
             _handle_error(LookupError('membership not found'))
         
         if args.person_id:
-            person = _get_person_by_id(args.person_id)
+            person = queries.person_id(args.person_id)
             if not person:
                 return _handle_error(ValueError('not a valid person_id'))
             membership.person_id = args.person_id
@@ -581,14 +569,14 @@ class Memberships(restful.Resource):
         except IntegrityError:
             _handle_error(ValueError('start_date must be less than end_date'))
 
-        return marshal(membership, membership_fields)
+        return marshal(membership, fields.membership_fields)
     
     @AUTH.login_required
     def delete(self, membership_id):
 
         DB.create_all()
 
-        membership = _get_membership_by_id(membership_id)
+        membership = queries.membership(membership_id)
         if not membership:
             _handle_error(LookupError('membership not found'))
 
@@ -611,7 +599,7 @@ class Officerships(restful.Resource):
         parser = reqparse.RequestParser(argument_class=CustomArgument)
 
         parser.add_argument('page', type=int, default=1)
-        parser.add_argument('pagesize', type=int)
+        parser.add_argument('pagesize', type=int, default=10)
         
         args = parser.parse_args()
 
@@ -619,19 +607,31 @@ class Officerships(restful.Resource):
         
         if officership_id:
 
-            officership = _get_officership_by_id(officership_id)
+            officership = queries.officership(officership_id)
 
             if officership:
-                return marshal(officership, officership_fields)
+                return marshal(officership, fields.officership_fields)
             else:
                 _handle_error(LookupError('officership not found'))
 
         else:
 
-            return list(map(
-                lambda officership: 
-                    marshal(officership, officership_fields), 
-                list(models.Officership.query.limit(args.pagesize).offset(args.page-1))))
+            nextpage = _calculate_nextpage_number(
+                    args.page, args.pagesize, 
+                    queries.officerships_count())
+
+            return marshal({
+                    'officerships': queries.officerships(args.page, args.pagesize),
+                    'page': args.page,
+                    'pagesize': args.pagesize,
+                    'nextpage': {
+                        'endpoint': 'officerships' if nextpage else None,
+                        'params': {
+                            'page': nextpage,
+                            'pagesize': args.pagesize,
+                        },
+                    },
+                }, fields.officerships_page_fields)
 
     @AUTH.login_required
     def post(self):
@@ -647,7 +647,7 @@ class Officerships(restful.Resource):
         
         args = parser.parse_args()
 
-        person = _get_person_by_id(args.person_id)
+        person = queries.person_id(args.person_id)
         if not person:
             _handle_error(LookupError('person not found'))
 
@@ -664,7 +664,7 @@ class Officerships(restful.Resource):
         except IntegrityError:
             _handle_error(ValueError('start_date must be less than end_date'))
 
-        return marshal(officership, officership_fields)
+        return marshal(officership, fields.officership_fields)
 
     @AUTH.login_required
     def put(self, officership_id):
@@ -680,12 +680,12 @@ class Officerships(restful.Resource):
 
         args = parser.parse_args()
 
-        officership = _get_officership_by_id(officership_id)
+        officership = queries.officership(officership_id)
         if not officership:
             _handle_error(LookupError('officership not found'))
         
         if args.person_id:
-            person = _get_person_by_id(args.person_id)
+            person = queries.person_id(args.person_id)
             if not person:
                 _handle_error(LookupError('person not found'))
             officership.person_id = args.person_id
@@ -701,14 +701,14 @@ class Officerships(restful.Resource):
         except IntegrityError:
             _handle_error(ValueError('start_date must be less than end_date'))
 
-        return marshal(officership, officership_fields)
+        return marshal(officership, fields.officership_fields)
 
     @AUTH.login_required
     def delete(self, officership_id):
 
         DB.create_all()
 
-        officership = _get_officership_by_id(officership_id)
+        officership = queries.officership(officership_id)
         if not officership:
             _handle_error(LookupError('officership not found'))
 
@@ -760,7 +760,7 @@ class Database(restful.Resource):
             'username': username,
             'password': password}
 
-        return marshal(database, database_fields)
+        return marshal(database, fields.database_fields)
 
 API.add_resource(
     Root, 
