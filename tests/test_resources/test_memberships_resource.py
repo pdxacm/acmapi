@@ -171,7 +171,12 @@ class test_memberships_resource(unittest.TestCase):
                 'http://localhost:5000/memberships/')
             self.assertEqual(
                 json.loads(response.data),
-                [])
+                {
+                    'page': 1,
+                    'pagesize': 10,
+                    'nextpage': None,
+                    'memberships': []
+                })
 
     @freeze_time("2012-01-14 12:00:01")
     def test_delete_non_existing_membership(self):
@@ -217,13 +222,20 @@ class test_memberships_resource(unittest.TestCase):
                 'http://localhost:5000/memberships/')
             self.assertEqual(
                 json.loads(response.data),
-                [{
-                    'id': 1,
-                    'person_id': 2,
-                    'person': 'http://localhost:5000/people/2',
-                    'start_date': '2014-04-11',
-                    'end_date': '2014-04-12',
-                }])
+                {
+                    'page': 1,
+                    'pagesize': 10,
+                    'nextpage': None,
+                    'memberships': [
+                        {
+                            'id': 1,
+                            'person_id': 2,
+                            'person': 'http://localhost:5000/people/2',
+                            'start_date': '2014-04-11',
+                            'end_date': '2014-04-12',
+                        }
+                    ]
+                })
                 
     @freeze_time("2012-01-14 12:00:01")
     def test_update_existing_membership(self):

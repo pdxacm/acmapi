@@ -232,15 +232,22 @@ class test_people_resource(unittest.TestCase):
         
             self.assertEqual(
                 json.loads(response.data),
-                [{ 'id': 1,
-                    'username': 'root',
-                    'name': None,
-                    'email': None,
-                    'website': None,
-                    'gravatar_email': None,
-                    'gravatar_id': None,
-                    'avatar_url': None,
-                    }])
+                {
+                    'page': 1,
+                    'pagesize': 10,
+                    'nextpage': None,
+                    'people': [
+                        { 'id': 1,
+                            'username': 'root',
+                            'name': None,
+                            'email': None,
+                            'website': None,
+                            'gravatar_email': None,
+                            'gravatar_id': None,
+                            'avatar_url': None,
+                         }
+                    ]
+                })
 
     @freeze_time("2012-01-14 12:00:01")
     def test_list_everything_1(self):
@@ -262,26 +269,33 @@ class test_people_resource(unittest.TestCase):
         
             self.assertEqual(
                 json.loads(response.data),
-                [{
-                    'id': 1,
-                    'username': 'root',
-                    'name': None,
-                    'email': None,
-                    'website': None,
-                    'gravatar_email': None,
-                    'gravatar_id': None,
-                    'avatar_url': None,
-                    },
-                    {
-                    'id': 2,
-                    'username': 'bob',
-                    'name': 'Bob Billy',
-                    'email': 'bbob@example.com',
-                    'website': 'http://bbob.example.com',
-                    'gravatar_email': None,
-                    'gravatar_id': None,
-                    'avatar_url': None,
-                }])
+                {
+                    'page': 1,
+                    'pagesize': 10,
+                    'nextpage': None,
+                    'people': [
+                        {
+                            'id': 1,
+                            'username': 'root',
+                            'name': None,
+                            'email': None,
+                            'website': None,
+                            'gravatar_email': None,
+                            'gravatar_id': None,
+                            'avatar_url': None,
+                            },
+                            {
+                            'id': 2,
+                            'username': 'bob',
+                            'name': 'Bob Billy',
+                            'email': 'bbob@example.com',
+                            'website': 'http://bbob.example.com',
+                            'gravatar_email': None,
+                            'gravatar_id': None,
+                            'avatar_url': None,
+                        }
+                    ]
+                })
 
     @freeze_time("2012-01-14 12:00:01")
     def test_list_everything_2(self):
@@ -314,36 +328,43 @@ class test_people_resource(unittest.TestCase):
         
             self.assertEqual(
                 json.loads(response.data),
-                [{
-                    'id': 1,
-                    'username': 'root',
-                    'name': None,
-                    'email': None,
-                    'website': None,
-                    'gravatar_email': None,
-                    'gravatar_id': None,
-                    'avatar_url': None,
-                    },
                 {
-                    'id': 2,
-                    'username': 'bob',
-                    'name': 'Bob Billy',
-                    'email': 'bbob@example.com',
-                    'website': 'http://bbob.example.com',
-                    'gravatar_email': None,
-                    'gravatar_id': None,
-                    'avatar_url': None,
-                },
-                {
-                    'id': 3,
-                    'username': 'foo',
-                    'name': 'Foo Bar',
-                    'email': 'foobar@example.com',
-                    'website': 'http://foobar.example.com',
-                    'gravatar_email': None,
-                    'gravatar_id': None,
-                    'avatar_url': None,
-                }])
+                    'page': 1,
+                    'pagesize': 10,
+                    'nextpage': None,
+                    'people': [
+                        {
+                            'id': 1,
+                            'username': 'root',
+                            'name': None,
+                            'email': None,
+                            'website': None,
+                            'gravatar_email': None,
+                            'gravatar_id': None,
+                            'avatar_url': None,
+                            },
+                        {
+                            'id': 2,
+                            'username': 'bob',
+                            'name': 'Bob Billy',
+                            'email': 'bbob@example.com',
+                            'website': 'http://bbob.example.com',
+                            'gravatar_email': None,
+                            'gravatar_id': None,
+                            'avatar_url': None,
+                        },
+                        {
+                            'id': 3,
+                            'username': 'foo',
+                            'name': 'Foo Bar',
+                            'email': 'foobar@example.com',
+                            'website': 'http://foobar.example.com',
+                            'gravatar_email': None,
+                            'gravatar_id': None,
+                            'avatar_url': None,
+                        }
+                    ]
+                })
 
     @freeze_time("2012-01-14 12:00:01")
     def test_delete_existing_by_id(self):
@@ -373,15 +394,22 @@ class test_people_resource(unittest.TestCase):
              
             self.assertEqual(
                 json.loads(response.data),
-                [{ 'id': 1,
-                    'username': 'root',
-                    'name': None,
-                    'email': None,
-                    'website': None,
-                    'gravatar_email': None,
-                    'gravatar_id': None,
-                    'avatar_url': None,
-                    }])
+                {
+                    'page': 1,
+                    'pagesize': 10,
+                    'nextpage': None,
+                    'people': [
+                        { 'id': 1,
+                          'username': 'root',
+                          'name': None,
+                          'email': None,
+                          'website': None,
+                          'gravatar_email': None,
+                          'gravatar_id': None,
+                          'avatar_url': None,
+                        }
+                    ]
+                })
 
     @freeze_time("2012-01-14 12:00:01")
     def test_delete_existing_by_username(self):
@@ -411,15 +439,22 @@ class test_people_resource(unittest.TestCase):
              
             self.assertEqual(
                 json.loads(response.data),
-                [{ 'id': 1,
-                    'username': 'root',
-                    'name': None,
-                    'email': None,
-                    'website': None,
-                    'gravatar_email': None,
-                    'gravatar_id': None,
-                    'avatar_url': None,
-                    }])
+                {
+                    'page': 1,
+                    'pagesize': 10,
+                    'nextpage': None,
+                    'people': [
+                        { 'id': 1,
+                          'username': 'root',
+                          'name': None,
+                          'email': None,
+                          'website': None,
+                          'gravatar_email': None,
+                          'gravatar_id': None,
+                          'avatar_url': None,
+                        }
+                    ]
+                })
 
     @freeze_time("2012-01-14 12:00:01")
     def test_delete_non_existing_by_id(self):
@@ -439,15 +474,22 @@ class test_people_resource(unittest.TestCase):
              
             self.assertEqual(
                 json.loads(response.data),
-                [{ 'id': 1,
-                    'username': 'root',
-                    'name': None,
-                    'email': None,
-                    'website': None,
-                    'gravatar_email': None,
-                    'gravatar_id': None,
-                    'avatar_url': None,
-                    }])
+                {
+                    'page': 1,
+                    'pagesize': 10,
+                    'nextpage': None,
+                    'people': [
+                        { 'id': 1,
+                          'username': 'root',
+                          'name': None,
+                          'email': None,
+                          'website': None,
+                          'gravatar_email': None,
+                          'gravatar_id': None,
+                          'avatar_url': None,
+                        }
+                    ]
+                })
 
     @freeze_time("2012-01-14 12:00:01")
     def test_delete_non_existing_by_username(self):
@@ -467,15 +509,23 @@ class test_people_resource(unittest.TestCase):
              
             self.assertEqual(
                 json.loads(response.data),
-                [{ 'id': 1,
-                    'username': 'root',
-                    'name': None,
-                    'email': None,
-                    'website': None,
-                    'gravatar_email': None,
-                    'gravatar_id': None,
-                    'avatar_url': None,
-                    }])
+                {
+                    'page': 1,
+                    'pagesize': 10,
+                    'nextpage': None,
+                    'people': [
+                        { 
+                            'id': 1,
+                            'username': 'root',
+                            'name': None,
+                            'email': None,
+                            'website': None,
+                            'gravatar_email': None,
+                            'gravatar_id': None,
+                            'avatar_url': None,
+                        }
+                    ]
+                })
 
     @freeze_time("2012-01-14 12:00:01")
     def test_invalid_delete(self):
@@ -487,22 +537,29 @@ class test_people_resource(unittest.TestCase):
 
             self.assertEqual(
                 json.loads(response.data),
-                { 'message': 'delete failed, nothing to delete' })
-
+                {u'exception': u'LookupError', u'message': u'person not found'}) 
             response = client.get(
                     'http://localhost:5000/people/')
              
             self.assertEqual(
                 json.loads(response.data),
-                [{ 'id': 1,
-                    'username': 'root',
-                    'name': None,
-                    'email': None,
-                    'website': None,
-                    'gravatar_email': None,
-                    'gravatar_id': None,
-                    'avatar_url': None,
-                    }])
+                {
+                    'page': 1,
+                    'pagesize': 10,
+                    'nextpage': None,
+                    'people': [
+                        { 
+                            'id': 1,
+                            'username': 'root',
+                            'name': None,
+                            'email': None,
+                            'website': None,
+                            'gravatar_email': None,
+                            'gravatar_id': None,
+                            'avatar_url': None,
+                        }
+                    ]
+                })
 
     @freeze_time("2012-01-14 12:00:01")
     def test_update_existing_person_by_id(self):

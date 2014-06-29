@@ -163,29 +163,34 @@ class test_memberships_resource(unittest.TestCase):
 
             self.assertEqual(
                 json.loads(response.data),
-                [
-                    {
-                        'title': 'Title A',
-                        'description': 'Description A',
-                        'content': 'This is Post 1 content',
-                        "edited_at": '2012-01-14 12:00:01.000000',
-                        "editor": "http://localhost:5000/people/1", 
-                        "editor_id": 1, 
-                        "hidden": False, 
-                        "post_id": 1, 
-                        "revision": 1, 
-                    },{
-                        'title': 'Title B',
-                        'description': 'Description B',
-                        'content': 'This is Post 1 content',
-                        "edited_at": '2012-01-14 12:00:01.000000',
-                        "editor": "http://localhost:5000/people/1", 
-                        "editor_id": 1, 
-                        "hidden": False, 
-                        "post_id": 1, 
-                        "revision": 2, 
-                    }
-                ])
+                {
+                    'page': 1,
+                    'pagesize': 10,
+                    'nextpage': None,
+                    'posts': [
+                        {
+                            'title': 'Title A',
+                            'description': 'Description A',
+                            'content': 'This is Post 1 content',
+                            "edited_at": '2012-01-14 12:00:01.000000',
+                            "editor": "http://localhost:5000/people/1", 
+                            "editor_id": 1, 
+                            "hidden": False, 
+                            "post_id": 1, 
+                            "revision": 1, 
+                        },{
+                            'title': 'Title B',
+                            'description': 'Description B',
+                            'content': 'This is Post 1 content',
+                            "edited_at": '2012-01-14 12:00:01.000000',
+                            "editor": "http://localhost:5000/people/1", 
+                            "editor_id": 1, 
+                            "hidden": False, 
+                            "post_id": 1, 
+                            "revision": 2, 
+                        }
+                    ]
+                })
 
     @freeze_time("2012-01-14 12:00:01")
     def test_multiple_posts_with_multiple_revisions(self):
@@ -244,84 +249,99 @@ class test_memberships_resource(unittest.TestCase):
 
             self.assertEqual(
                 json.loads(response.data),
-                [
-                    {
-                        'title': 'Title A',
-                        'description': 'Description A',
-                        'content': 'This is Post 1 content',
-                        "edited_at": '2012-01-14 12:00:01.000000',
-                        "editor": "http://localhost:5000/people/1", 
-                        "editor_id": 1, 
-                        "hidden": False, 
-                        "post_id": 1, 
-                        "revision": 1, 
-                    },{
-                        'title': 'Title B',
-                        'description': 'Description B',
-                        'content': 'This is Post 1 content',
-                        "edited_at": '2012-01-14 12:00:01.000000',
-                        "editor": "http://localhost:5000/people/1", 
-                        "editor_id": 1, 
-                        "hidden": False, 
-                        "post_id": 1, 
-                        "revision": 2, 
-                    }
-                ])
+                {
+                    'page': 1,
+                    'pagesize': 10,
+                    'nextpage': None,
+                    'posts': [
+                        {
+                            'title': 'Title A',
+                            'description': 'Description A',
+                            'content': 'This is Post 1 content',
+                            "edited_at": '2012-01-14 12:00:01.000000',
+                            "editor": "http://localhost:5000/people/1", 
+                            "editor_id": 1, 
+                            "hidden": False, 
+                            "post_id": 1, 
+                            "revision": 1, 
+                        },{
+                            'title': 'Title B',
+                            'description': 'Description B',
+                            'content': 'This is Post 1 content',
+                            "edited_at": '2012-01-14 12:00:01.000000',
+                            "editor": "http://localhost:5000/people/1", 
+                            "editor_id": 1, 
+                            "hidden": False, 
+                            "post_id": 1, 
+                            "revision": 2, 
+                        }
+                    ]
+                })
 
             response = client.get(
                 'http://localhost:5000/posts/2')
 
             self.assertEqual(
                 json.loads(response.data),
-                [
-                    {
-                        'title': 'Title C',
-                        'description': 'Description C',
-                        'content': 'This is Post 1 content',
-                        "edited_at": '2012-01-14 12:00:01.000000',
-                        "editor": "http://localhost:5000/people/1", 
-                        "editor_id": 1, 
-                        "hidden": False, 
-                        "post_id": 2, 
-                        "revision": 1, 
-                    },{
-                        'title': 'Title D',
-                        'description': 'Description D',
-                        'content': 'This is Post 1 content',
-                        "edited_at": '2012-01-14 12:00:01.000000',
-                        "editor": "http://localhost:5000/people/1", 
-                        "editor_id": 1, 
-                        "hidden": False, 
-                        "post_id": 2, 
-                        "revision": 2, 
-                    }
-                ])
+                {
+                    'page': 1,
+                    'pagesize': 10,
+                    'nextpage': None,
+                    'posts': [
+                        {
+                            'title': 'Title C',
+                            'description': 'Description C',
+                            'content': 'This is Post 1 content',
+                            "edited_at": '2012-01-14 12:00:01.000000',
+                            "editor": "http://localhost:5000/people/1", 
+                            "editor_id": 1, 
+                            "hidden": False, 
+                            "post_id": 2, 
+                            "revision": 1, 
+                        },{
+                            'title': 'Title D',
+                            'description': 'Description D',
+                            'content': 'This is Post 1 content',
+                            "edited_at": '2012-01-14 12:00:01.000000',
+                            "editor": "http://localhost:5000/people/1", 
+                            "editor_id": 1, 
+                            "hidden": False, 
+                            "post_id": 2, 
+                            "revision": 2, 
+                        }
+                    ]
+                })
 
             response = client.get(
                 'http://localhost:5000/posts/')
 
             self.assertEqual(
                 json.loads(response.data),
-                [
-                    {
-                        'title': 'Title B',
-                        'description': 'Description B',
-                        'content': 'This is Post 1 content',
-                        "edited_at": '2012-01-14 12:00:01.000000',
-                        "editor": "http://localhost:5000/people/1", 
-                        "editor_id": 1, 
-                        "hidden": False, 
-                        "post_id": 1, 
-                        "revision": 2, 
-                    },{
-                        'title': 'Title D',
-                        'description': 'Description D',
-                        'content': 'This is Post 1 content',
-                        "edited_at": '2012-01-14 12:00:01.000000',
-                        "editor": "http://localhost:5000/people/1", 
-                        "editor_id": 1, 
-                        "hidden": False, 
-                        "post_id": 2, 
-                        "revision": 2, 
-                    }
-                ])
+                {
+                    'page': 1,
+                    'pagesize': 10,
+                    'nextpage': None,
+                    'posts': [
+                        {
+                            'title': 'Title B',
+                            'description': 'Description B',
+                            'content': 'This is Post 1 content',
+                            "edited_at": '2012-01-14 12:00:01.000000',
+                            "editor": "http://localhost:5000/people/1", 
+                            "editor_id": 1, 
+                            "hidden": False, 
+                            "post_id": 1, 
+                            "revision": 2, 
+                        },{
+                            'title': 'Title D',
+                            'description': 'Description D',
+                            'content': 'This is Post 1 content',
+                            "edited_at": '2012-01-14 12:00:01.000000',
+                            "editor": "http://localhost:5000/people/1", 
+                            "editor_id": 1, 
+                            "hidden": False, 
+                            "post_id": 2, 
+                            "revision": 2, 
+                        }
+                    ]
+                })
