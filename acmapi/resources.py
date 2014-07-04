@@ -717,6 +717,11 @@ class Officerships(restful.Resource):
 
         return {'message': 'delete successful'}
 
+class Officers(restful.Resource):
+
+    def get(self):
+        pass
+
 class Database(restful.Resource):
 
     @AUTH.login_required

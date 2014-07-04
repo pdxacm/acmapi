@@ -142,3 +142,73 @@ def events_count():
         .join(sub, models.Event.index==sub.c.max_index)\
         .filter(models.Event.list==sub.c.list)\
         .one()[0]
+
+""" Officers """
+
+def active_officers():
+    """ returns all of the people who are active officers """
+
+    sub = DB.session.query(
+            models.Officership.person_id.label('person_id'))\
+        .filter(
+            models.Officership.start_date <= sqlalchemy.func.current_date(),
+            sqlalchemy.or_(
+                models.Officership.end_date >= sqlalchemy.func.current_date(),
+                models.Officership.end_date == None))\
+        .subquery()
+
+    return DB.session.query(
+            models.Person)\
+        .join(sub, models.Person.id == sub.c.person_id)\
+        .distinct().all()
+
+def active_officers_count():
+    """ returns the number of people who are active officers """
+    sub = DB.session.query(
+            models.Officership.person_id.label('person_id'))\
+        .filter(
+            models.Officership.start_date <= sqlalchemy.func.current_date(),
+            sqlalchemy.or_(
+                models.Officership.end_date >= sqlalchemy.func.current_date(),
+                models.Officership.end_date == None))\
+        .subquery()
+
+    return DB.session.query(
+            sqlalchemy.func.count(models.Person.id))\
+        .join(sub, models.Person.id == sub.c.person_id)\
+        .distinct().one()[0]
+
+""" Members """
+
+def active_members():
+    """ returns all of the people who are active members """
+
+    sub = DB.session.query(
+            models.Membership.person_id.label('person_id'))\
+        .filter(
+            models.Membership.start_date <= sqlalchemy.func.current_date(),
+            sqlalchemy.or_(
+                models.Membership.end_date >= sqlalchemy.func.current_date(),
+                models.Membership.end_date == None))\
+        .subquery()
+
+    return DB.session.query(
+            models.Person)\
+        .join(sub, models.Person.id == sub.c.person_id)\
+        .distinct().all()
+
+def active_members_count():
+    """ returns the number of people who are active members """
+    sub = DB.session.query(
+            models.Membership.person_id.label('person_id'))\
+        .filter(
+            models.Membership.start_date <= sqlalchemy.func.current_date(),
+            sqlalchemy.or_(
+                models.Membership.end_date >= sqlalchemy.func.current_date(),
+                models.Membership.end_date == None))\
+        .subquery()
+
+    return DB.session.query(
+            sqlalchemy.func.count(models.Person.id))\
+        .join(sub, models.Person.id == sub.c.person_id)\
+        .distinct().one()[0]
