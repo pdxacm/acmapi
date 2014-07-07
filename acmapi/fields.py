@@ -20,6 +20,8 @@ root_fields = {
     'posts_url': UrlUsage('posts', absolute=True),
     'memberships_url': UrlUsage('memberships', absolute=True),
     'officerships_url': UrlUsage('officerships', absolute=True),
+    'members_url': UrlUsage('members', absolute=True),
+    'officers_url': UrlUsage('officers', absolute=True),
 }
 
 event_fields = {

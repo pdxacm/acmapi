@@ -720,7 +720,61 @@ class Officerships(restful.Resource):
 class Officers(restful.Resource):
 
     def get(self):
-        pass
+
+        parser = reqparse.RequestParser(argument_class=CustomArgument)
+
+        parser.add_argument('page', type=int, default=1)
+        parser.add_argument('pagesize', type=int, default=10)
+
+        args = parser.parse_args()
+
+        people = queries.active_officers(args.page, args.pagesize)
+        count = queries.active_officers_count()
+
+        nextpage = _calculate_nextpage_number(args.page, args.pagesize, count)
+
+        return marshal({
+                'people': people,
+                'page': args.page,
+                'pagesize': args.pagesize,
+                'nextpage': {
+                    'endpoint': 'events' if nextpage else None,
+                    'params': {
+                        'page': nextpage,
+                        'pagesize': args.pagesize,
+                    },
+                },
+            }, fields.people_page_fields)
+
+class Members(restful.Resource):
+
+    def get(self):
+
+        parser = reqparse.RequestParser(argument_class=CustomArgument)
+
+        parser.add_argument('page', type=int, default=1)
+        parser.add_argument('pagesize', type=int, default=10)
+
+        args = parser.parse_args()
+
+        people = queries.active_members(args.page, args.pagesize)
+        count = queries.active_members_count()
+
+        nextpage = _calculate_nextpage_number(args.page, args.pagesize, count)
+
+        return marshal({
+                'people': people,
+                'page': args.page,
+                'pagesize': args.pagesize,
+                'nextpage': {
+                    'endpoint': 'events' if nextpage else None,
+                    'params': {
+                        'page': nextpage,
+                        'pagesize': args.pagesize,
+                    },
+                },
+            }, fields.people_page_fields)
+
 
 class Database(restful.Resource):
 
@@ -803,6 +857,16 @@ API.add_resource(
     '/officerships/',
     '/officerships/<int:officership_id>',
     endpoint='officerships')
+
+API.add_resource(
+    Officers,
+    '/officers/',
+    endpoint='officers')
+
+API.add_resource(
+    Members,
+    '/members/',
+    endpoint='members')
 
 API.add_resource(
     Database, 

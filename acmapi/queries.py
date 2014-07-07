@@ -145,7 +145,7 @@ def events_count():
 
 """ Officers """
 
-def active_officers():
+def active_officers(page, pagesize):
     """ returns all of the people who are active officers """
 
     sub = DB.session.query(
@@ -157,10 +157,12 @@ def active_officers():
                 models.Officership.end_date == None))\
         .subquery()
 
-    return DB.session.query(
+    return list(DB.session.query(
             models.Person)\
         .join(sub, models.Person.id == sub.c.person_id)\
-        .distinct().all()
+        .distinct()\
+        .limit(pagesize)\
+        .offset((page-1)*pagesize))
 
 def active_officers_count():
     """ returns the number of people who are active officers """
@@ -180,7 +182,7 @@ def active_officers_count():
 
 """ Members """
 
-def active_members():
+def active_members(page, pagesize):
     """ returns all of the people who are active members """
 
     sub = DB.session.query(
@@ -192,10 +194,12 @@ def active_members():
                 models.Membership.end_date == None))\
         .subquery()
 
-    return DB.session.query(
+    return list(DB.session.query(
             models.Person)\
         .join(sub, models.Person.id == sub.c.person_id)\
-        .distinct().all()
+        .distinct()\
+        .limit(pagesize)\
+        .offset((page-1)*pagesize))
 
 def active_members_count():
     """ returns the number of people who are active members """

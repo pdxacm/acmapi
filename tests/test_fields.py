@@ -62,7 +62,13 @@ class test_fields(unittest.TestCase):
                         "posts_url": [
                             "http://localhost/posts/",
                             "http://localhost/posts/<int:post_id>"
-                        ]
+                        ],
+                        "members_url": [
+                            "http://localhost/members/",
+                        ],
+                        "officers_url": [
+                            "http://localhost/officers/",
+                        ],
                     })
     
     def test_person_fields(self):
